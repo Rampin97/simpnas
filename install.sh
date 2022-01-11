@@ -35,6 +35,9 @@ echo "Installing Backport version of SMARTmonTools"
 echo "=================================================================================="
 DEBIAN_FRONTEND=noninteractive \apt -t buster-backports install smartmontools -y
 echo "================================================================================="
+# May also this
+# update-alternatives --set iptables /usr/sbin/iptables-legacy
+# update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
 apt install docker-ce docker-ce-cli containerd.io -y
 apt install docker.io -y
 #echo "=================================================================================="
@@ -70,7 +73,7 @@ echo "==========================================================================
 echo "Installing and Enabling Filebrowser..."
 echo "=================================================================================="
 cd /usr/local/etc
-curl -fsSL https://filebrowser.org/get.sh | bash
+curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
 cp /simpnas/conf/filebrowser.service /etc/systemd/system/
 chmod 755 /etc/systemd/system/filebrowser.service
 systemctl enable filebrowser
