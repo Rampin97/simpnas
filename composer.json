@@ -1,16 +1,23 @@
 {
     "name": "rampin97/simpnas",
     "description": "Simple Network Attached Storage System for your home or small business",
+    "authors": [
+        {
+            "name": "Daniele"
+        }
+    ],
     "type": "project",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Simpnas\\": "src/"
+            "Simpnas\\": "src/Simpnas"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
+        "ext-json": "*",
         "php-di/php-di": "^6.3",
+        "php-di/slim-bridge": "^3.2",
         "phpmailer/phpmailer": "^6.5",
         "slim/psr7": "^1.5",
         "slim/slim": "^4.9",
@@ -24,5 +31,8 @@
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest"
+    },
+    "scripts": {
+        "server": "export SIMPNAS_CACHE=\"false\"; php -S localhost:8888 src/public/index.php"
     }
 }

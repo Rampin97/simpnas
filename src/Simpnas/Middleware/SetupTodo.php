@@ -2,15 +2,15 @@
 
 namespace Simpnas\Middleware;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Simpnas\SimpleVars;
 use Simpnas\Utils;
 use Slim\App;
 
-class SetupCompleted implements MiddlewareInterface
+class SetupTodo implements MiddlewareInterface
 {
 
     private App $app;
@@ -26,17 +26,17 @@ class SetupCompleted implements MiddlewareInterface
     /**
      * @inheritDoc
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function process(Request $request, RequestHandlerInterface $handler): Response
     {
         if ($this->simpleVars->getDatabaseKey(SimpleVars::DBKEY_SETUP, false)) {
-            return $handler->handle($request);
+            return Utils::redirect(
+                $request,
+                $this->app->getResponseFactory()->createResponse(),
+                'dashboard',
+                302
+            );
         }
 
-        return Utils::redirect(
-            $request,
-            $this->app->getResponseFactory()->createResponse(),
-            'setup.step1',
-            302
-        );
+        return $handler->handle($request);
     }
 }
