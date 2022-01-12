@@ -2,9 +2,8 @@
 if [[ $(id -u) -ne 0 ]] ; 
 	then
 	echo "=========================================================" ;
-	echo "Enter root password and then rerun install.sh to continue" ; 
+	echo "Run install.sh as root to continue" ;
 	echo "=========================================================" ;
-	su ;
 	exit 1 ; 
 fi
 echo "=================================================================================="
@@ -23,7 +22,7 @@ DEBIAN_FRONTEND=noninteractive \apt install samba rsync php-cgi git mdadm crypts
 echo "================================================================================="
 echo "Install Docker Repo"
 echo "================================================================================="
-curl -fsSL https://download.docker.com/linux/$(lsb_release -s -i | tr '[:upper:]' '[:lower:]')/gpg | apt-key add -
+curl -fsSL "https://download.docker.com/linux/$(lsb_release -s -i | tr '[:upper:]' '[:lower:]')/gpg" | apt-key add -
 add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/$(lsb_release -s -i | tr '[:upper:]' '[:lower:]') $(lsb_release -cs) stable"
 #Check to see if its a standard Debian install or Armbian if its Debian then add the backports REPO as this repo is already added on Armbian by default.
 if [ ! -f /etc/armbian-release ]; then
@@ -72,7 +71,7 @@ mkdir /volumes
 echo "=================================================================================="
 echo "Installing and Enabling Filebrowser..."
 echo "=================================================================================="
-cd /usr/local/etc
+cd /usr/local/etc || exit
 curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
 cp /simpnas/conf/filebrowser.service /etc/systemd/system/
 chmod 755 /etc/systemd/system/filebrowser.service
@@ -87,7 +86,7 @@ systemctl enable simpnas
 systemctl start simpnas
 IP="$(ip addr show | grep -E '^\s*inet' | grep -m1 global | awk '{ print $2 }' | sed 's|/.*||')";
 HOSTNAME="$(hostname)";
-echo "==============================================================================================================================="
-echo "                                                   Almost There!																                               "
-echo "             Visit http://$IP:81 in your web browser to complete installation								 	                                 "
-echo "==============================================================================================================================="
+echo "=================================================================================="
+echo "                              Almost There!			                      						"
+echo "        Visit http://$IP:81 in your web browser to complete installation    			"
+echo "=================================================================================="
