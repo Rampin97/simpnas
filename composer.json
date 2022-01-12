@@ -16,9 +16,11 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
+        "k-ko/slim-twig-flash": "^2.0",
         "php-di/php-di": "^6.3",
         "php-di/slim-bridge": "^3.2",
         "phpmailer/phpmailer": "^6.5",
+        "slim/flash": "^0.4.0",
         "slim/psr7": "^1.5",
         "slim/slim": "^4.9",
         "slim/twig-view": "^3.0",
