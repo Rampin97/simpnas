@@ -1,0 +1,101 @@
+<?php
+
+class <%title_clean%> extends AbstractService
+{
+
+    /**
+     * @inheritDoc
+     */
+    public function getId(): string
+    {
+        return "<%container_name%>";
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName(): string
+    {
+        return "<%title%>";
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDescription(): string
+    {
+        return "<%description%>";
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCategory(): string
+    {
+        return "<%category%>";
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getWebsite(): string
+    {
+        return "<%category%>";
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getContainerName(): string
+    {
+        return "<%container_name%>";
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExternalHostname(): string
+    {
+        return "<%external_hostname%>";
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLocalPort(): int
+    {
+        return <%local_port%>;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProtocol(): string
+    {
+        return "<%protocol%>";
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function install(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function update(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function uninstall(): bool
+    {
+        return true;
+    }
+}
