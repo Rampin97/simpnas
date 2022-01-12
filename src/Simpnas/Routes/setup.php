@@ -1,12 +1,15 @@
 <?php
 
+namespace Simpnas\Routes;
+
+
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
-return function (App $app) {
+return static function (App $app) {
     $app->group('/setup', function (RouteCollectorProxy $group) {
 
-        $group->get('/cancel-orders', [Cron::class, 'cancelOrders']);
+        $group->get('/step-1', [Cron::class, 'cancelOrders']);
 
     })->addMiddleware(new CheckValidCron());
 };

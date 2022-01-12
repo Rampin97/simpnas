@@ -137,5 +137,5 @@ foreach ($apps_array as $app) {
     foreach ($app as $key => $value) {
         $appFile = str_replace('<%'.$key.'%>', $value, $appFile);
     }
-    file_put_contents($app["title_clean"], $appFile);
+    file_put_contents($app["title_clean"] . '.php', $appFile);
 }

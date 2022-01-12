@@ -39,11 +39,11 @@ if(isset($_POST['login'])){
     <title><?php echo gethostname(); ?> login</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="plugins/fontawesome-free/css/all.min.css">
+    <link href="src/public/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="src/public/assets/plugins/fontawesome-free/css/all.min.css">
 
     <!-- Custom styles for this template -->
-    <link href="css/signin.css" rel="stylesheet">
+    <link href="src/public/assets/css/signin.css" rel="stylesheet">
   </head>
 
   <body class="text-center">

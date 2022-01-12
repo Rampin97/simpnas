@@ -1,5 +1,17 @@
 <?php
 
+namespace Simpnas;
+
+use Simpnas\Services\AbstractService;
+use Simpnas\Services\BitwardenRS;
+use Simpnas\Services\DAAPD;
+use Simpnas\Services\HomeAssistant;
+use Simpnas\Services\Jellyfin;
+use Simpnas\Services\Nextcloud;
+use Simpnas\Services\NginxProxyManager;
+use Simpnas\Services\PhotoPrism;
+use Simpnas\Services\Transmission;
+use Simpnas\Services\UnifiController;
 use Twig\Extension\AbstractExtension;
 
 class SimpleVars extends AbstractExtension
@@ -22,7 +34,7 @@ class SimpleVars extends AbstractExtension
      */
     public function getFunctions(): array
     {
-        $list = ['getHostname', 'getPrimaryIp', 'getDockerVolume', 'getHomeVolume', 'getOsDisk'];
+        $list = ['getHostname', 'getPrimaryIp', 'getDockerVolume', 'getHomeVolume', 'getOsDisk', 'getApps'];
 
         return array_map(function ($name) {
             return [$name, [$this, $name]];
@@ -62,6 +74,23 @@ class SimpleVars extends AbstractExtension
      */
     public function getOsDisk(): string {
         return $this->execute("findmnt -n -o SOURCE --target / | cut -c -8");
+    }
+
+    /**
+     * @return AbstractService[]
+     */
+    public function getApps(): array {
+        return [
+            new Nextcloud(),
+            new Jellyfin(),
+            new PhotoPrism(),
+            new NginxProxyManager(),
+            new DAAPD(),
+            new Transmission(),
+            new BitwardenRS(),
+            new HomeAssistant(),
+            new UnifiController()
+        ];
     }
 
 }

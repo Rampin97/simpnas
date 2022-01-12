@@ -1,5 +1,7 @@
 <?php
 
+namespace Simpnas\Services;
+
 abstract class AbstractService
 {
 

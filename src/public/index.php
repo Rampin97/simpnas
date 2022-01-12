@@ -2,6 +2,7 @@
 
 use DI\ContainerBuilder;
 use Psr\Container\ContainerInterface;
+use Simpnas\SimpleVars;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
@@ -9,19 +10,21 @@ use Slim\Views\TwigMiddleware;
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 session_start();
+
+$cacheFolder = __DIR__ . '/../../cache';
 
 $builder = new ContainerBuilder();
 
 $builder->addDefinitions([
-    Twig::class => DI\factory(static function (ContainerInterface $container) {
+    Twig::class => DI\factory(static function (ContainerInterface $container) use ($cacheFolder) {
         $twig = Twig::create(__DIR__ . '/../templates');
 
         $env = $twig->getEnvironment();
 
-        $env->setCache(__DIR__ . '/../cache');
+        $env->setCache($cacheFolder);
         $env->addExtension($container->get(SimpleVars::class));
 
         return $twig;
@@ -31,9 +34,9 @@ $builder->addDefinitions([
     })
 ]);
 
-$builder->enableCompilation(__DIR__ . '/../cache');
+$builder->enableCompilation($cacheFolder);
 // $builder->enableDefinitionCache();
-$builder->writeProxiesToFile(true, __DIR__ . '/../cache');
+$builder->writeProxiesToFile(true, $cacheFolder);
 
 try {
     $container = $builder->build();
@@ -43,7 +46,7 @@ try {
 
 
     $routeCollector = $app->getRouteCollector();
-    $routeCollector->setCacheFile(__DIR__ . '/../cache/routes.php');
+    $routeCollector->setCacheFile("$cacheFolder/routes.php");
 
     $app->addBodyParsingMiddleware();
     $app->addRoutingMiddleware();

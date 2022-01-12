@@ -267,7 +267,7 @@
 
 
         <!-- Graphs -->
-<script src="plugins/Chart.js/Chart.min.js"></script>
+<script src="src/public/assets/plugins/Chart.js/Chart.min.js"></script>
 <script>  
 
   <?php

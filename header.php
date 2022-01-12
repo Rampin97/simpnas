@@ -28,12 +28,12 @@ $session_username = $_SESSION['username'];
     <title><?php echo gethostname(); ?></title>
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" type="text/css" href="plugins/bootstrap/css/bootstrap.min.css" >
+    <link rel="stylesheet" type="text/css" href="src/public/assets/plugins/bootstrap/css/bootstrap.min.css" >
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" type="text/css" href="css/dashboard.css" >
-    <link rel="stylesheet" type="text/css" href="css/loader.css">
-    <link rel="stylesheet" type="text/css" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="src/public/assets/css/dashboard.css" >
+    <link rel="stylesheet" type="text/css" href="src/public/assets/css/loader.css">
+    <link rel="stylesheet" type="text/css" href="src/public/assets/plugins/fontawesome-free/css/all.min.css">
     
   </head>
 
