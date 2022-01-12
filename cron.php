@@ -115,9 +115,6 @@
   use PHPMailer\PHPMailer\PHPMailer;
   use PHPMailer\PHPMailer\SMTP;
 
-  require 'plugins/PHPMailer/PHPMailer.php';
-  require 'plugins/PHPMailer/SMTP.php';
-
   // Instantiation and passing `true` enables exceptions
   $mail = new PHPMailer(true);
 
@@ -147,5 +144,3 @@
   } catch (Exception $e) {
       echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
   }
-
-?>
