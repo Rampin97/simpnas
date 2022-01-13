@@ -1,0 +1,28 @@
+{% extends 'base/site.twig' %}
+
+{% block body %}
+    <div class="col-12">
+        <form action="{{ full_url_for('actions.login') }}" class="form-signin" method="post">
+            <h1 class="mb-3">
+                <i class="fa fa-cube"></i> SimpNAS
+                <br>
+                <small class="text-secondary">{{ getHostname() }}</small>
+            </h1>
+
+            <div id="alert">
+                <ul class="alert alert-danger">
+                    {% for msg in flash('error') %}
+                        <li>{{ msg }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
+            <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+
+            <button type="submit" class="btn btn-primary p-2 btn-block" name="login">Login</button>
+
+            <a href="{{ full_url_for('fileManager') }}" class="btn btn-secondary p-2 btn-block"><i class="fa fa-folder"></i> File Manager</a>
+        </form>
+    </div>
+{% endblock %}

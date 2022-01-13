@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>SimpNAS</title>
+
+    <link rel="stylesheet" type="text/css" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/loader.css">
+    <link rel="stylesheet" type="text/css" href="assets/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/dashboard.css">
+
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body class="{{ bodyClass|default([])|join(', ') }}">
+
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+    <div class="navbar-brand col-md-3 col-lg-2 mr-0 px-3"><span data-feather="box"></span> SimpNAS <small>({{ getHostname() }})</small></div>
+
+    {% if (showMenu ?? true) %}
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    {% endif %}
+
+    {% if (isLoggedIn() and not (showUser ?? true)) %}
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="logout.php">Logged in as, <strong>{{ getUsername() }}</strong> <span data-feather="log-out"></span></a>
+            </li>
+        </ul>
+    {% endif %}
+</nav>
+
+<div class="container-fluid">
+    <div id="cover-spin"></div>
+    <div class="row">
+        {% if showMenu ?? true %}
+            {{ include('base/nav.twig') }}
+        {% endif %}
+        {% block body %}
+        {% endblock %}
+    </div>
+</div>
+
+<script src="assets/plugins/jquery/jquery.min.js"></script>
+<script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/plugins/inputmask/jquery.inputmask.min.js"></script>
+<script src="assets/plugins/inputmask/inputmask.binding.js"></script>
+<script src="assets/plugins/bootstrap-show-password/bootstrap-show-password.esm.min.js"></script>
+<script src="assets/plugins/feather-icons/feather.min.js"></script>
+<script src="assets/js/common.js"></script>
+
+{% block script %}
+{% endblock %}
+</body>
+
+</html>

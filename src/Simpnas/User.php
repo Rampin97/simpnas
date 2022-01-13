@@ -3,8 +3,10 @@
 namespace Simpnas;
 
 use Slim\Flash\Messages;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class User
+class User extends AbstractExtension
 {
 
     private Messages $messages;
@@ -15,10 +17,25 @@ class User
     }
 
     /**
+     * @return array
+     */
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('isLoggedIn', [$this, 'isLoggedIn']),
+            new TwigFunction('getUsername', [$this, 'getUsername'])
+        ];
+    }
+
+    /**
      * @return bool
      */
     public function isLoggedIn(): bool {
         return array_key_exists('logged', $_SESSION) && $_SESSION['logged'];
+    }
+
+    public function getUsername(): string {
+        return $this->isLoggedIn() ? $_SESSION['username'] : '';
     }
 
     /**

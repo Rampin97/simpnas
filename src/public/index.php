@@ -20,12 +20,13 @@ session_start();
 $builder = new ContainerBuilder();
 
 $builder->addDefinitions([
-    Twig::class => DI\factory(static function (SimpleVars $simpleVars, Messages $messages) {
+    Twig::class => DI\factory(static function (SimpleVars $simpleVars, Messages $messages, User $user) {
         $twig = Twig::create(__DIR__ . '/../templates', [
             'cache' => Utils::isCacheEnabled() ? Utils::cacheFolder : false
         ]);
 
         $twig->addExtension($simpleVars);
+        $twig->addExtension($user);
         $twig->addExtension(new SlimFlashMessages($messages));
 
         return $twig;

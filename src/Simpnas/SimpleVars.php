@@ -15,6 +15,7 @@ use Simpnas\Services\PhotoPrism;
 use Simpnas\Services\Transmission;
 use Simpnas\Services\UnifiController;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 class SimpleVars extends AbstractExtension
 {
@@ -112,7 +113,7 @@ class SimpleVars extends AbstractExtension
         ];
 
         return array_map(function ($name) {
-            return [$name, [$this, $name]];
+            return new TwigFunction($name, [$this, $name]);
         }, $list);
     }
 

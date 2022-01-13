@@ -68,8 +68,10 @@ class Utils
         $routeContext = RouteContext::fromRequest($request);
         $route = $routeContext->getRouteParser();
 
+        $url = strpos($where, "http") === 0 ? $where : $route->fullUrlFor($request->getUri(), $where);
+
         return $response
-            ->withHeader('Location', $route->fullUrlFor($request->getUri(), $where))
+            ->withHeader('Location', $url)
             ->withStatus($status);
     }
 

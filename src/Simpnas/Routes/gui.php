@@ -3,6 +3,7 @@
 namespace Simpnas\Routes;
 
 use Simpnas\Controllers\Dashboard;
+use Simpnas\Controllers\Extra;
 use Simpnas\Controllers\Login;
 use Simpnas\Middleware\SetupCompleted;
 use Simpnas\Middleware\UserLoggedIn;
@@ -12,8 +13,11 @@ use Slim\Routing\RouteCollectorProxy;
 return static function (App $app) {
     $app->group('', function (RouteCollectorProxy $group) {
 
-        $group->get('/', [Dashboard::class, 'index'])
+        $group->get('/', [Extra::class, 'index'])
             ->setName('index');
+
+        $group->get('/file-manager', [Extra::class, 'fileManager'])
+            ->setName('fileManager');
 
         $group->get('/login', [Login::class, 'page'])
             ->setName('login');
