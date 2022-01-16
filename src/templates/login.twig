@@ -1,28 +1,35 @@
 {% extends 'base/site.twig' %}
 
-{% block body %}
-    <div class="col-12">
-        <form action="{{ full_url_for('actions.login') }}" class="form-signin" method="post">
-            <h1 class="mb-3">
-                <i class="fa fa-cube"></i> SimpNAS
-                <br>
-                <small class="text-secondary">{{ getHostname() }}</small>
-            </h1>
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/login.css">
+{% endblock %}
 
-            <div id="alert">
-                <ul class="alert alert-danger">
-                    {% for msg in flash('error') %}
-                        <li>{{ msg }}</li>
-                    {% endfor %}
-                </ul>
+{% block body %}
+
+    <main class="form-signin">
+
+        {{ include('base/messages.twig') }}
+
+        <form action="{{ full_url_for('actions.login') }}" method="POST">
+            <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="SimpNAS" width="72" height="57">
+            <h1 class="h3 mb-3 fw-normal"><i data-feather="box"></i> SimpNAS</h1>
+
+            <div class="form-floating">
+                <input name="username" type="text" class="form-control" id="floatingInput" placeholder="Username" required autofocus>
+                <label for="floatingInput">Username</label>
             </div>
 
-            <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
-            <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+            <div class="form-floating">
+                <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password" required>
+                <label for="floatingPassword">Password</label>
+            </div>
 
-            <button type="submit" class="btn btn-primary p-2 btn-block" name="login">Login</button>
 
-            <a href="{{ full_url_for('fileManager') }}" class="btn btn-secondary p-2 btn-block"><i class="fa fa-folder"></i> File Manager</a>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
+
+            <a href="{{ full_url_for('fileManager') }}" class="w-100 btn btn-lg btn-secondary mt-2"><i data-feather="folder"></i> File Manager</a>
+
+            <!--<p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>-->
         </form>
-    </div>
+    </main>
 {% endblock %}

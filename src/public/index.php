@@ -8,6 +8,7 @@ use Simpnas\Utils;
 use Slim\Flash\Messages;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
+use Twig\Extension\DebugExtension;
 use Twig\Extension\SlimFlashMessages;
 
 require __DIR__ . '/../../vendor/autoload.php';
@@ -21,13 +22,20 @@ $builder = new ContainerBuilder();
 
 $builder->addDefinitions([
     Twig::class => DI\factory(static function (SimpleVars $simpleVars, Messages $messages, User $user) {
+        $cache = Utils::isCacheEnabled();
+
         $twig = Twig::create(__DIR__ . '/../templates', [
-            'cache' => Utils::isCacheEnabled() ? Utils::cacheFolder : false
+            'debug' => !$cache,
+            'cache' => $cache ? Utils::cacheFolder : false
         ]);
 
         $twig->addExtension($simpleVars);
         $twig->addExtension($user);
         $twig->addExtension(new SlimFlashMessages($messages));
+
+        if (!$cache) {
+            $twig->addExtension(new DebugExtension());
+        }
 
         return $twig;
     }),

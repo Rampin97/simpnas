@@ -1,0 +1,16 @@
+{% macro alert(type, text) %}
+    <div class="alert {{ type|e('html_attr')}} alert-dismissible fade show" role="alert">
+        {{ text }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endmacro %}
+
+
+{% for type, messages in flash() %}
+    {% set alertClass = type is same as('error') ? 'alert-danger' : 'alert-success' %}
+    {% for message in messages %}
+        {{ _self.alert(alertClass, message) }}
+    {% endfor %}
+{% endfor %}

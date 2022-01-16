@@ -1,0 +1,38 @@
+{% extends 'base/site.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/admin.css">
+{% endblock %}
+
+{#
+
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+<div class="navbar-brand col-md-3 col-lg-2 mr-0 px-3"><span data-feather="box"></span> SimpNAS <small>({{ getHostname() }})</small></div>
+
+{% if (showMenu ?? true) %}
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+{% endif %}
+
+{% if (isLoggedIn() and not (showUser ?? true)) %}
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="logout.php">Logged in as, <strong>{{ getUsername() }}</strong> <span data-feather="log-out"></span></a>
+        </li>
+    </ul>
+{% endif %}
+</nav>
+
+<div class="container-fluid">
+<div id="cover-spin"></div>
+<div class="row">
+    {% if showMenu ?? true %}
+        {{ include('base/nav.twig') }}
+    {% endif %}
+    {% block body %}
+    {% endblock %}
+</div>
+</div>
+
+#}

@@ -20,7 +20,7 @@ use Twig\TwigFunction;
 class SimpleVars extends AbstractExtension
 {
 
-    private const dbFile = __DIR__ . '/../config.json';
+    private const dbFile = __DIR__ . '/../../config.json';
 
     private array $databaseData = [];
 
