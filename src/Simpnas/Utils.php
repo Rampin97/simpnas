@@ -84,4 +84,17 @@ class Utils
         return $env === false || !in_array(strtolower($env), ['0', 'false', 'no'], true);
     }
 
+    /**
+     * @return bool
+     */
+    public static function isFakeEnabled(): bool {
+        $env = getenv('SIMPNAS_FAKE', true);
+
+        if ($env === false) {
+            return false;
+        }
+
+        return in_array(strtolower($env), ['1', 'true', 'yes'], true);
+    }
+
 }

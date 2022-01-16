@@ -4,35 +4,35 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/admin.css">
 {% endblock %}
 
-{#
+{% block body %}
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{{ full_url_for('index') }}">SimpNAS <small>{{ getHostname() }}</small></a>
 
-<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-<div class="navbar-brand col-md-3 col-lg-2 mr-0 px-3"><span data-feather="box"></span> SimpNAS <small>({{ getHostname() }})</small></div>
+        {% if (showMenu ?? true) %}
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        {% endif %}
 
-{% if (showMenu ?? true) %}
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-{% endif %}
+        <div class="navbar-nav">
+            {% if (isLoggedIn() and not (showUser ?? true)) %}
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="#">Sign out</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
 
-{% if (isLoggedIn() and not (showUser ?? true)) %}
-    <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-            <a class="nav-link" href="logout.php">Logged in as, <strong>{{ getUsername() }}</strong> <span data-feather="log-out"></span></a>
-        </li>
-    </ul>
-{% endif %}
-</nav>
+    <div class="container-fluid">
+        <div class="row">
+            {% if (showMenu ?? true) %}
+                {{ include('base/nav.twig') }}
+            {% endif %}
 
-<div class="container-fluid">
-<div id="cover-spin"></div>
-<div class="row">
-    {% if showMenu ?? true %}
-        {{ include('base/nav.twig') }}
-    {% endif %}
-    {% block body %}
-    {% endblock %}
-</div>
-</div>
-
-#}
+            <main class="{{ (showMenu ?? true) ? 'col-md-9 ms-sm-auto col-lg-10 px-md-4' : 'col-md-12 col-lg-12 col-12' }}">
+                {% block main %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+{% endblock %}

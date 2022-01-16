@@ -12,13 +12,13 @@
     {% endblock %}
 </head>
 
-<body class="{{ bodyClass|default([])|join(', ') }}">
+<body class="{{ bodyClass|default([])|join(' ') }}">
 
 {% block body %}
 {% endblock %}
 
-
 <script src="/assets/plugins/feather-icons/feather.min.js"></script>
+<script src="/assets/plugins/bootstrap/bootstrap.bundle.min.js"></script>
 <script>
     feather.replace();
 </script>

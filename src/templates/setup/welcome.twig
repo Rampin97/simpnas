@@ -1,0 +1,37 @@
+{% extends 'base/site.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/cover.css">
+{% endblock %}
+
+{% block body %}
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="mb-auto">
+            <div>
+                <h3 class="float-md-start mb-0">SimpNAS</h3>
+            </div>
+        </header>
+
+        <main class="mb-auto px-3">
+            <h1>Welcome to SimpNAS</h1>
+
+            <p class="lead">
+                Thank you for choosing SimpNAS to be your new Storage Vault. Before continuing please read the following
+            </p>
+            <ul>
+                <li>Any Storage Device Attached may possibly be wiped, please backup your data before continuing.</li>
+                <li>Any user that was created initially will be deleted, they can be recreated in the webUI.</li>
+            </ul>
+            <p class="lead">
+                <a href="{{ full_url_for('setup.step1') }}" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Continue</a>
+            </p>
+        </main>
+
+        <!--
+        <footer class="mt-auto text-white-50">
+            <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
+        </footer>
+        -->
+
+    </div>
+{% endblock %}

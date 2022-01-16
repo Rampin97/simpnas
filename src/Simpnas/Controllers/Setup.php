@@ -12,16 +12,40 @@ class Setup
 
     private Twig $twig;
 
+    private const defaultData = [
+        'showMenu' => false,
+        'showUser' => false
+    ];
+
     public function __construct(Twig $twig)
     {
         $this->twig = $twig;
     }
 
-    public function step1(Request $request, Response $response, SimpleVars $simpleVars): Response {
-        return $this->twig->render($response, 'login.twig', [
-            'bodyClass' => ['text-center'],
-            'showMenu' => false
-        ]);
+    public function welcome(Response $response): Response {
+        return $this->twig->render($response, 'setup/welcome.twig', array_merge(self::defaultData, [
+            'bodyClass' => ['d-flex', 'h-100', 'text-center', 'text-white', 'bg-dark']
+        ]));
+    }
+
+    public function step1(Response $response): Response {
+        $currentTimezone = exec("timedatectl show -p Timezone --value");
+        exec("timedatectl list-timezones", $timezoneList);
+
+        return $this->twig->render($response, 'setup/setup1.twig', array_merge(self::defaultData, [
+            'currentTimezone' => $currentTimezone,
+            'timezoneList' => $timezoneList
+        ]));
+    }
+
+    public function step2(Response $response): Response {
+        $currentTimezone = exec("timedatectl show -p Timezone --value");
+        exec("timedatectl list-timezones", $timezoneList);
+
+        return $this->twig->render($response, 'setup/setup1.twig', array_merge(self::defaultData, [
+            'currentTimezone' => $currentTimezone,
+            'timezoneList' => $timezoneList
+        ]));
     }
 
 }

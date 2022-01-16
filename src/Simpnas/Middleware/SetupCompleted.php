@@ -35,7 +35,7 @@ class SetupCompleted implements MiddlewareInterface
         return Utils::redirect(
             $request,
             $this->app->getResponseFactory()->createResponse(),
-            'setup.step1',
+            'setup.welcome',
             302
         );
     }

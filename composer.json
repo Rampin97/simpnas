@@ -35,6 +35,6 @@
         "roave/security-advisories": "dev-latest"
     },
     "scripts": {
-        "server": "export SIMPNAS_CACHE=\"false\"; php -S localhost:8888 -t src/public"
+        "server": "export SIMPNAS_CACHE=\"false\"; export SIMPNAS_FAKE=\"true\"; php -S localhost:8888 -t src/public"
     }
 }
