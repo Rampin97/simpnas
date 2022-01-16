@@ -39,12 +39,10 @@ class Setup
     }
 
     public function step2(Response $response): Response {
-        $currentTimezone = exec("timedatectl show -p Timezone --value");
-        exec("timedatectl list-timezones", $timezoneList);
+        exec("ls /sys/class/net | grep -v docker | grep -v lo | grep -v veth | grep -v br-", $networkList);
 
-        return $this->twig->render($response, 'setup/setup1.twig', array_merge(self::defaultData, [
-            'currentTimezone' => $currentTimezone,
-            'timezoneList' => $timezoneList
+        return $this->twig->render($response, 'setup/setup2.twig', array_merge(self::defaultData, [
+            'networkList' => $networkList
         ]));
     }
 

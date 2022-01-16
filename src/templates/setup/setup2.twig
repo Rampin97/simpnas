@@ -1,0 +1,34 @@
+{% extends 'base/admin.twig' %}
+
+{% block main %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ full_url_for('setup.welcome') }}">Setup</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Network</li>
+        </ol>
+    </nav>
+
+    <form method="POST" action="{{ full_url_for('actions.setup.step2') }}">
+        <fieldset>
+            <legend>Network Configuration</legend>
+
+            <div class="mb-3">
+                <label for="inputHostname" class="form-label">Hostname</label>
+                <input name="hostname" type="text" class="form-control" id="inputHostname" placeholder="">
+            </div>
+
+            <div class="mb-3">
+                <label for="inputInterface" class="form-label">Network Interface</label>
+                <select name="interface" id="inputInterface" class="form-select form-select-lg">
+                    {% for network in networkList %}
+                        <option value="{{ network|e('html_attr') }}">{{ network }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Next <i data-feather="arrow-right"></i></button>
+        </fieldset>
+    </form>
+
+{% endblock %}

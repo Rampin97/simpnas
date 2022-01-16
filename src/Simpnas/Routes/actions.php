@@ -17,6 +17,9 @@ return static function (App $app) {
         $group->group('/setup', function (RouteCollectorProxy $group) {
             $group->post('/step1', [Setup::class, 'step1'])
                 ->setName('actions.setup.step1');
+
+            $group->post('/step2', [Setup::class, 'step2'])
+                ->setName('actions.setup.step2');
         });
 
     });
