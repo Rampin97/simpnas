@@ -4,6 +4,7 @@ namespace Simpnas\Controllers;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Simpnas\SimpleConst;
 use Simpnas\User;
 use Simpnas\Utils;
 
@@ -21,7 +22,7 @@ class Extra
 
     public function fileManager(Request $request, Response $response): Response {
         $uri = $request->getUri();
-        $uri = $uri->withPort(82)
+        $uri = $uri->withPort(SimpleConst::fileManagerPort)
             ->withFragment('')
             ->withPath('')
             ->withQuery('');

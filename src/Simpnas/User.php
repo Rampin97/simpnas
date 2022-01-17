@@ -48,7 +48,7 @@ class User extends AbstractExtension
         $cmd = sprintf('bash %s %s %s', $file, escapeshellarg($username), escapeshellarg($password));
         $result = exec($cmd);
 
-        if ($result === "ok") {
+        if ($result === "ok" || Utils::isFakeEnabled()) {
             $_SESSION['logged'] = true;
             $_SESSION['username'] = $username;
 
