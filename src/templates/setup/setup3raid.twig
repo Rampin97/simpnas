@@ -1,0 +1,65 @@
+{% extends 'base/admin.twig' %}
+
+{% block head %}
+    <style>
+        .form-check.form-switch {
+            font-size: 22px;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ full_url_for('setup.welcome') }}">Setup</a></li>
+            <li class="breadcrumb-item">Volume</li>
+            <li class="breadcrumb-item active" aria-current="page">RAID</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        <a href="{{ full_url_for('setup.step3.simple') }}" class="btn btn-outline-secondary">Use Simple Volume</a>
+        <a href="{{ full_url_for('setup.step3.raid') }}" class="btn btn-outline-secondary">Rescan for new Disks</a>
+    </div>
+
+    {% if diskOptions|length > 0 %}
+        <form method="POST" action="{{ full_url_for('actions.setup.step3.raid') }}">
+            <fieldset>
+                <legend>Volume Creation <small>RAID</small></legend>
+
+                <div class="mb-3">
+                    <label for="inputRaid" class="form-label">RAID Type</label>
+                    <select name="raid" id="inputRaid" class="form-select form-select-lg" required>
+                        <option value="0">RAID 0 (Striping)</option>
+                        <option value="1">RAID 1 (Mirroring)</option>
+                        <option {{ not (diskOptions|length > 2) ? 'disabled' : '' }} value="5">RAID 5 (Parity)</option>
+                        <option {{ not (diskOptions|length > 3) ? 'disabled' : '' }} value="6">RAID 6 (Double Parity)</option>
+                        <option {{ not (diskOptions|length > 3) ? 'disabled' : '' }} value="10">RAID 10 (Mirror / Sripe)</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    {% for d in diskOptions %}
+                        <div class="form-check form-switch">
+                            <input checked value="{{ d['id']|e('html_attr') }}" name="disks[]" class="form-check-input" type="checkbox" role="switch" id="switchDisk--{{ d['id']|e('html_attr') }}">
+                            <label class="form-check-label" for="switchDisk--{{ d['id']|e('html_attr') }}">{{ d['id'] }} {{ d['vendor'] }} ({{ d['size'] }}B)</label>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="inputVolumeName" class="form-label">Volume Name</label>
+                    <input placeholder="Volume Name" required name="volumeName" type="text" class="form-control form-control-lg" id="inputVolumeName"  pattern="[a-zA-Z0-9-_]{1,15}">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Next <i data-feather="arrow-right"></i></button>
+            </fieldset>
+        </form>
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+            No disks found. <a href="{{ full_url_for('setup.step3.raid') }}" class="alert-link">Rescan for new Disks</a>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base/admin.twig' %}
+
+{% block main %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ full_url_for('setup.welcome') }}">Setup</a></li>
+            <li class="breadcrumb-item active" aria-current="page">First user</li>
+        </ol>
+    </nav>
+
+    <form method="POST" action="{{ full_url_for('actions.setup.step4') }}">
+        <fieldset>
+            <legend>First admin user</legend>
+
+            <div class="mb-3">
+                <label for="inputUsername" class="form-label">Username</label>
+                <input required name="username" type="text" class="form-control form-control-lg" id="inputUsername" pattern="[a-z0-9]{1,20}" autofocus>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputPassword" class="form-label">Password</label>
+                <input required name="password" type="password" class="form-control form-control-lg" id="inputPassword">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Complete setup <i data-feather="arrow-right"></i></button>
+        </fieldset>
+    </form>
+
+{% endblock %}

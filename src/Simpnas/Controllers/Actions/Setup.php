@@ -4,6 +4,7 @@ namespace Simpnas\Controllers\Actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Simpnas\SimpleVars;
 use Simpnas\Utils;
 
 
@@ -34,10 +35,6 @@ class Setup
             $hostname = $data['hostname'];
             $interface = $data['interface'];
             $method = strtolower($data['method']);
-            $address = $data['address'];
-            $netmask = $data['netmask'];
-            $gateway = $data['gateway'];
-            $dns = $data['dns'];
 
             $currentHostname = exec("hostname");
 
@@ -59,6 +56,12 @@ class Setup
             }
 
             if ($method === 'static') {
+                // Only for static option
+                $address = $data['address'] ?? '';
+                $netmask = $data['netmask'] ?? '';
+                $gateway = $data['gateway'] ?? '';
+                $dns = $data['dns'] ?? '';
+
                 $myFile = "/etc/systemd/network/$interface.network";
                 $fh = fopen($myFile, 'wb') or die("not able to write to file");
                 $stringData = "[Match]\nName=$interface\n\n[Network]\nAddress=$address$netmask\nGateway=$gateway\nDNS=$dns\n";
@@ -74,6 +77,165 @@ class Setup
             $request,
             $response,
             'setup.step3',
+            303
+        );
+    }
+
+    public function step3simple(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+
+        if (!Utils::isFakeEnabled()) {
+            $volumeName = $data['volumeName'];
+            $disk = $data['disk'];
+
+            exec ("wipefs -a /dev/$disk");
+            exec ("(echo g; echo n; echo p; echo 1; echo; echo; echo w) | fdisk /dev/$disk");
+            $diskpart = exec("lsblk -o PKNAME,KNAME,TYPE /dev/$disk | grep part | awk '{print $2}'");
+            //WIPE out any superblocks
+            exec("mdadm --zero-superblock /dev/$diskpart");
+            exec ("mkdir /volumes/$volumeName");
+            exec ("mkfs.ext4 -F /dev/$diskpart");
+            exec ("e2label /dev/$diskpart $volumeName");
+            exec ("mount /dev/$diskpart /volumes/$volumeName");
+
+            $uuid = exec("blkid -o value --match-tag UUID /dev/$diskpart");
+            $myFile = "/etc/fstab";
+            $fh = fopen($myFile, 'ab') or die("can't open file");
+            $stringData = "UUID=$uuid /volumes/$volumeName ext4 defaults 0 1\n";
+            fwrite($fh, $stringData);
+            fclose($fh);
+        }
+
+        return Utils::redirect(
+            $request,
+            $response,
+            'setup.step4',
+            303
+        );
+    }
+
+    public function step3raid(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+
+        if (!Utils::isFakeEnabled()) {
+            $volumeName = $data['volumeName'];
+            $disks = $data['disks'];
+            $raid = $data['raid'];
+
+            $disksCount = count($disks);
+
+            //find and stop any arrays
+            exec("ls /dev/md*",$md_array);
+
+            foreach($md_array as $md){
+                exec("mdadm --stop $md");
+            }
+
+            //Remove Superblocks on selected disks and wipe any partition info
+            foreach($disks as $disk){
+                exec("mdadm --zero-superblock /dev/$disk");
+                exec ("wipefs -a /dev/$disk");
+            }
+
+            //prefix /dev/ to each var in the array so instead of sda it would be /dev/sda
+           $fullDiskList = implode(' ', preg_filter('/^/', '/dev/', $disks));
+
+            exec("yes | mdadm --create --verbose /dev/md1 --level=$raid --raid-devices=$disksCount " . $fullDiskList);
+
+            exec ("mkdir /volumes/$volumeName");
+
+            exec ("mkfs.ext4 -F /dev/md1");
+
+            exec ("mount /dev/md1 /volumes/$volumeName");
+
+            // To make sure that the array is reassembled automatically at boot
+            // exec ("mdadm --detail --scan | tee -a /etc/mdadm/mdadm.conf");
+
+            $uuid = exec("blkid -o value --match-tag UUID /dev/md1");
+
+            $myFile = "/etc/fstab";
+            $fh = fopen($myFile, 'ab') or die("can't open file");
+            $stringData = "UUID=$uuid /volumes/$volumeName ext4 defaults 0 0\n";
+            fwrite($fh, $stringData);
+            fclose($fh);
+        }
+
+        return Utils::redirect(
+            $request,
+            $response,
+            'setup.step4',
+            303
+        );
+    }
+
+    public function step4(Request $request, Response $response, SimpleVars $simpleVars): Response {
+
+        $data = $request->getParsedBody();
+
+        if (!Utils::isFakeEnabled()) {
+            $volumeName = exec("ls /volumes");
+            $username = $data['username'];
+            $password = $data['password'];
+
+            $simpleVars->setDatabaseKey(SimpleVars::DBKEY_SETUP, true);
+
+            $myFile = "/etc/samba/shares/share";
+            $fh = fopen($myFile, 'w') or die("not able to write to file");
+            $stringData = "[share]\n   comment = Shared files\n   path = /volumes/$volumeName/share\n   browsable = yes\n   writable = yes\n   guest ok = yes\n   read only = no\n   valid users = @users\n   force group = users\n   create mask = 0660\n   directory mask = 0770";
+            fwrite($fh, $stringData);
+            fclose($fh);
+
+            exec ("mkdir /volumes/$volumeName/docker");
+            exec ("mkdir /volumes/$volumeName/users");
+            exec ("mkdir /volumes/$volumeName/share");
+            exec ("chmod 770 /volumes/$volumeName/share");
+
+            $myFile = "/etc/samba/shares/users";
+            $fh = fopen($myFile, 'wb') or die("not able to write to file");
+            $stringData = "[users]\n   comment = Users Home Folders\n   path = /volumes/$volumeName/users\n   read only = no\n   create mask = 0600\n   directory mask = 0700\n";
+            fwrite($fh, $stringData);
+            fclose($fh);
+
+            $myFile = "/etc/samba/shares.conf";
+            $fh = fopen($myFile, 'ab') or die("not able to write to file");
+            $stringData = "\ninclude = /etc/samba/shares/users";
+            fwrite($fh, $stringData);
+            fclose($fh);
+
+            $myFile = "/etc/samba/shares.conf";
+            $fh = fopen($myFile, 'ab') or die("not able to write to file");
+            $stringData = "\ninclude = /etc/samba/shares/share";
+            fwrite($fh, $stringData);
+            fclose($fh);
+
+            //Check to see if theres already a user added and delete that user
+            $existingUsername = exec("cat /etc/passwd | grep 1000 | awk -F: '{print $1}'");
+            if (!empty($existingUsername)){
+                exec("deluser --remove-home $existingUsername");
+            }
+
+            exec ("mkdir /volumes/$volumeName/users/$username");
+            exec ("chmod -R 700 /volumes/$volumeName/users/$username");
+
+            exec ("chgrp users /volumes/$volumeName/share");
+            //Create the new user UNIX way
+            exec ("useradd -g users -d /volumes/$volumeName/users/$username $username");
+            exec ("echo '$password\n$password' | passwd $username");
+            exec ("usermod -a -G admins $username");
+            exec ("echo '$password\n$password' | smbpasswd -a $username");
+            exec ("chown -R $username /volumes/$volumeName/users/$username");
+            //Create the user under file browser
+            exec("systemctl stop filebrowser");
+            exec ("filebrowser -d /usr/local/etc/filebrowser.db users add $username $password --perm.admin=true");
+            exec("systemctl start filebrowser");
+        }
+
+        return Utils::redirect(
+            $request,
+            $response,
+            'setup.complete',
             303
         );
     }

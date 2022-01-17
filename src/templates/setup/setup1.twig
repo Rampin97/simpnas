@@ -15,7 +15,7 @@
 
             <div class="mb-3">
                 <label for="inputTimezone" class="form-label">Timezone</label>
-                <select name="timezone" id="inputTimezone" class="form-select form-select-lg">
+                <select required name="timezone" id="inputTimezone" class="form-select form-select-lg">
                     {% for tz in timezoneList %}
                         <option {{ currentTimezone is same as(tz) ? 'selected' : '' }} value="{{ tz|e('html_attr') }}">{{ tz }}</option>
                     {% endfor %}

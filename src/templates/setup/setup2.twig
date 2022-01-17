@@ -15,20 +15,75 @@
 
             <div class="mb-3">
                 <label for="inputHostname" class="form-label">Hostname</label>
-                <input name="hostname" type="text" class="form-control" id="inputHostname" placeholder="">
+                <input required name="hostname" type="text" class="form-control form-control-lg" id="inputHostname" placeholder="{{ getHostname()|e('html_attr') }}" value="{{ getHostname()|e('html_attr') }}">
             </div>
 
-            <div class="mb-3">
-                <label for="inputInterface" class="form-label">Network Interface</label>
-                <select name="interface" id="inputInterface" class="form-select form-select-lg">
-                    {% for network in networkList %}
-                        <option value="{{ network|e('html_attr') }}">{{ network }}</option>
-                    {% endfor %}
-                </select>
+            <div class="row mb-3">
+                <div class="col-md-6 col-sm-12">
+                    <label for="inputInterface" class="form-label">Network Interface</label>
+                    <select name="interface" id="inputInterface" class="form-select form-select-lg" required>
+                        {% for network in networkList %}
+                            <option value="{{ network|e('html_attr') }}">{{ network }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <label for="inputMethod" class="form-label">Method</label>
+                    <select name="method" id="inputMethod" class="form-select form-select-lg" required>
+                        <option value="dhcp">DHCP</option>
+                        <option value="static">Static</option>
+                    </select>
+                </div>
             </div>
+
+            <div id="staticOptions"></div>
 
             <button type="submit" class="btn btn-primary">Next <i data-feather="arrow-right"></i></button>
+
+            <a href="{{ full_url_for('setup.step3.simple') }}" class="float-end text-muted">Skip - Use Existing Network Configuration</a>
         </fieldset>
     </form>
 
+{% endblock %}
+
+{% block staticOptions %}
+    <div class="row mb-3">
+        <div class="col-md-6 col-sm-12">
+            <div class="mb-3">
+                <label for="inputAddress" class="form-label">Address</label>
+                <input required name="address" type="text" class="form-control form-control-lg" id="inputAddress" placeholder="ex 192.168.1.5">
+            </div>
+
+            <label for="inputNetmask" class="form-label">Netmask</label>
+            <select name="netmask" id="inputNetmask" class="form-select form-select-lg" required>
+                <option value="/24">255.255.255.0</option>
+            </select>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="mb-3">
+                <label for="inputGateway" class="form-label">Gateway</label>
+                <input required name="gateway" type="text" class="form-control form-control-lg" id="inputGateway" placeholder="ex 192.168.1.1">
+            </div>
+
+            <label for="inputDns" class="form-label">DNS Server(s)</label>
+            <input required name="dns" type="text" class="form-control form-control-lg" id="inputDns" placeholder="ex 192.168.1.1">
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        const staticOptions = document.getElementById('staticOptions');
+
+        document.getElementById('inputMethod').addEventListener('change', (e) => {
+            switch (e.target.value) {
+                case 'dhcp':
+                    staticOptions.innerHTML = '';
+                    break;
+                case 'static':
+                    staticOptions.innerHTML = '{{ block('staticOptions')|e('js') }}';
+                    break;
+            }
+        });
+    </script>
 {% endblock %}

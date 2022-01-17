@@ -1,0 +1,49 @@
+{% extends 'base/admin.twig' %}
+
+{% block main %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ full_url_for('setup.welcome') }}">Setup</a></li>
+            <li class="breadcrumb-item">Volume</li>
+            <li class="breadcrumb-item active" aria-current="page">Simple</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        {% if diskOptions|length > 1 %}
+            <a href="{{ full_url_for('setup.step3.raid') }}" class="btn btn-outline-secondary">Use RAID Instead</a>
+        {% endif %}
+        <a href="{{ full_url_for('setup.step3.simple') }}" class="btn btn-outline-secondary">Rescan for new Disks</a>
+    </div>
+
+    {% if diskOptions|length > 0 %}
+        <form method="POST" action="{{ full_url_for('actions.setup.step3.simple') }}">
+            <fieldset>
+                <legend>Volume Creation <small>Simple</small></legend>
+
+                <div class="mb-3">
+                    <label for="inputDisk" class="form-label">Select Disk</label>
+                    <select aria-describedby="diskHelp" name="disk" id="inputDisk" class="form-select form-select-lg" required>
+                        {% for d in diskOptions %}
+                            <option value="{{ d['id']|e('html_attr') }}">{{ d['id'] }} {{ d['vendor'] }} ({{ d['size'] }}B)</option>
+                        {% endfor %}
+                    </select>
+                    <div id="diskHelp" class="form-text"><strong>Warning:</strong> This will <u>Delete</u> all Data on the selected Storage Device.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="inputVolumeName" class="form-label">Volume Name</label>
+                    <input placeholder="Volume Name" required name="volumeName" type="text" class="form-control form-control-lg" id="inputVolumeName"  pattern="[a-zA-Z0-9-_]{1,15}">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Next <i data-feather="arrow-right"></i></button>
+            </fieldset>
+        </form>
+        {% else %}
+            <div class="alert alert-danger" role="alert">
+                No disks found. <a href="{{ full_url_for('setup.step3.simple') }}" class="alert-link">Rescan for new Disks</a>
+            </div>
+    {% endif %}
+
+{% endblock %}
