@@ -2,12 +2,14 @@
 
 {% block main %}
 
-    <nav aria-label="breadcrumb">
+    <nav aria-label="breadcrumb" class="my-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ full_url_for('setup.welcome') }}">Setup</a></li>
             <li class="breadcrumb-item active" aria-current="page">Network</li>
         </ol>
     </nav>
+
+    {{ include('base/messages.twig') }}
 
     <form method="POST" action="{{ full_url_for('actions.setup.step2') }}">
         <fieldset>
@@ -38,9 +40,9 @@
 
             <div id="staticOptions"></div>
 
-            <button type="submit" class="btn btn-primary">Next <i data-feather="arrow-right"></i></button>
+            <button type="submit" class="btn btn-primary btn-lg w-100">Next <i data-feather="arrow-right"></i></button>
 
-            <a href="{{ full_url_for('setup.step3.simple') }}" class="float-end text-muted">Skip - Use Existing Network Configuration</a>
+            <a href="{{ full_url_for('setup.step3.simple') }}" class="float-end text-muted mt-3">Skip - Use Existing Network Configuration</a>
         </fieldset>
     </form>
 

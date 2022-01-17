@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>SimpNAS</title>
+    <title>{{ title|default([])|reverse|merge(['SimpNAS'])|reverse|join(' - ') }}</title>
 
     <link rel="stylesheet" type="text/css" href="/assets/plugins/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/global.css">
 
     {% block head %}
     {% endblock %}
@@ -17,11 +18,23 @@
 {% block body %}
 {% endblock %}
 
+<div class="modal fade" tabindex="-1" id="pageLoadingModal">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="spinner-border m-5 text-light" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="/assets/plugins/feather-icons/feather.min.js"></script>
 <script src="/assets/plugins/bootstrap/bootstrap.bundle.min.js"></script>
-<script>
-    feather.replace();
-</script>
+<script src="/assets/js/global.js"></script>
 
 {% block script %}
 {% endblock %}

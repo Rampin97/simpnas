@@ -55,3 +55,10 @@ body {
     color: #fff;
     border-bottom-color: #fff;
 }
+
+.bg-nas {
+    background-image: url('/assets/img/cover.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

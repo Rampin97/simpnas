@@ -1,0 +1,58 @@
+{% extends 'base/site.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/assets/css/cover.css">
+
+    <style>
+        .power-icon {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="mb-auto">
+            <div>
+                <h3 class="float-md-start mb-0">SimpNAS</h3>
+            </div>
+        </header>
+
+        <main class="mb-auto px-3">
+            <i class="power-icon" data-feather="power"></i>
+
+            <h1 class="mt-3">{{ powerTitle }}</h1>
+
+            {% if powerType is same as('reboot') %}
+                <p class="lead">
+                    Redirecting to the Dashboard in <span id="countdown"></span>s
+                </p>
+            {% endif %}
+        </main>
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    {% if powerType is same as('reboot') %}
+        <script>
+            // Total seconds to wait
+            let seconds = 45;
+
+            const countdown = () => {
+                seconds = seconds - 1;
+                if (seconds < 0) {
+                    window.location = "{{ full_url_for('dashboard')|e('js') }}";
+                } else {
+                    // Update remaining seconds
+                    document.getElementById("countdown").innerHTML = seconds;
+                    // Count down using javascript
+                    window.setTimeout(countdown, 1000);
+                }
+            };
+
+            countdown();
+        </script>
+    {% endif %}
+{% endblock %}

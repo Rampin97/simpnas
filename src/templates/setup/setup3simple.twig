@@ -2,7 +2,7 @@
 
 {% block main %}
 
-    <nav aria-label="breadcrumb">
+    <nav aria-label="breadcrumb" class="my-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ full_url_for('setup.welcome') }}">Setup</a></li>
             <li class="breadcrumb-item">Volume</li>
@@ -10,12 +10,14 @@
         </ol>
     </nav>
 
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3">
         {% if diskOptions|length > 1 %}
-            <a href="{{ full_url_for('setup.step3.raid') }}" class="btn btn-outline-secondary">Use RAID Instead</a>
+            <a href="{{ full_url_for('setup.step3.raid') }}" class="btn btn-outline-secondary"><i data-feather="server"></i> Use RAID Instead</a>
         {% endif %}
-        <a href="{{ full_url_for('setup.step3.simple') }}" class="btn btn-outline-secondary">Rescan for new Disks</a>
+        <a href="{{ full_url_for('setup.step3.simple') }}" class="btn btn-outline-danger"><i data-feather="refresh-cw"></i> Rescan for new Disks</a>
     </div>
+
+    {{ include('base/messages.twig') }}
 
     {% if diskOptions|length > 0 %}
         <form method="POST" action="{{ full_url_for('actions.setup.step3.simple') }}">
@@ -34,10 +36,10 @@
 
                 <div class="mb-3">
                     <label for="inputVolumeName" class="form-label">Volume Name</label>
-                    <input placeholder="Volume Name" required name="volumeName" type="text" class="form-control form-control-lg" id="inputVolumeName"  pattern="[a-zA-Z0-9-_]{1,15}">
+                    <input placeholder="Volume Name" required name="volumeName" type="text" class="form-control form-control-lg" id="inputVolumeName" pattern="[a-zA-Z0-9-_]{1,15}">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Next <i data-feather="arrow-right"></i></button>
+                <button type="submit" class="btn btn-primary btn-lg w-100">Next <i data-feather="arrow-right"></i></button>
             </fieldset>
         </form>
         {% else %}
