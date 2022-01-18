@@ -24,7 +24,7 @@ class Login
         return Functions::redirect(
             $request,
             $response,
-            $user->login($data['username'], $data['password']) ? 'dashboard' : 'login',
+            $user->login($data['username'], $data['password']) ? 'account.dashboard' : 'login',
             303
         );
     }

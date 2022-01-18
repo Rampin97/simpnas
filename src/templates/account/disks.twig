@@ -1,0 +1,74 @@
+{% extends 'base/admin.twig' %}
+{% import "base/utils.twig" as utils %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Disks</h1>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{{ full_url_for('account.disks') }}" type="button" class="btn btn-sm btn-outline-secondary">
+                <span data-feather="hard-drive"></span>
+                Rescan
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Disk</th>
+                <th>Vendor</th>
+                <th>Serial</th>
+                <th>Capacity</th>
+                <th>Type</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for d in disksList %}
+                <tr class="align-middle">
+                    <td><span data-feather="hard-drive"></span> {{ d.getId() }}</td>
+                    <td>{{ d.getVendor() }}</td>
+                    <td>{{ d.getSerial() }}</td>
+                    <td>{{ d.getSize() }}B</td>
+                    <td>{{ d.getType() }}</td>
+                    <td>
+                        {% if (d.isSmart()) %}
+                            <button data-bs-toggle="modal" data-bs-target="#healthInfoModal--{{ d.getId()|e('html_attr') }}" class="btn btn-outline-secondary btn-sm">
+                                <i data-feather="info"></i>
+                                Health Info
+                            </button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="text-center py-3 h3" colspan="6">No disks available!</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% for d in disksList %}
+        {% if (d.isSmart()) %}
+            <div class="modal fade" id="healthInfoModal--{{ d.getId()|e('html_attr') }}" tabindex="-1" aria-labelledby="modalLabel--{{ d.getId()|e('html_attr') }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel--{{ d.getId()|e('html_attr') }}">{{ d.getId() }} health info</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <pre>{{ d.getRawInfo() }}</pre>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

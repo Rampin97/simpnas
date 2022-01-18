@@ -32,7 +32,7 @@ class SetupTodo implements MiddlewareInterface
             return Functions::redirect(
                 $request,
                 $this->app->getResponseFactory()->createResponse(),
-                'dashboard',
+                'account.dashboard',
                 302
             );
         }

@@ -6,6 +6,7 @@ use Simpnas\Controllers\Dashboard;
 use Simpnas\Controllers\Extra;
 use Simpnas\Controllers\Login;
 use Simpnas\Controllers\Power;
+use Simpnas\Controllers\Storage;
 use Simpnas\Middleware\SetupCompleted;
 use Simpnas\Middleware\UserLoggedIn;
 use Slim\App;
@@ -36,7 +37,10 @@ return static function (App $app) {
         $group->group('/account', function (RouteCollectorProxy $group) {
 
             $group->get('/dashboard', [Dashboard::class, 'dashboard'])
-                ->setName('dashboard');
+                ->setName('account.dashboard');
+
+            $group->get('/disks', [Storage::class, 'disks'])
+                ->setName('account.disks');
 
         })->add(UserLoggedIn::class);
 

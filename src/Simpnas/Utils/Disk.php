@@ -85,7 +85,7 @@ class Disk extends StorageInfo
      * @return bool
      */
     public function isSmart(): bool {
-        return !empty(exec(sprintf("smartctl -i %s | grep 'Unavailable'", $this->getFullId())));
+        return empty(exec(sprintf("smartctl -i %s | grep 'Unavailable'", $this->getFullId())));
     }
 
     /**
@@ -111,7 +111,11 @@ class Disk extends StorageInfo
             case 'Solid State Device':
                 return 'SSD';
             default:
-                return '-';
+                if (empty(exec(sprintf("smartctl -i %s | grep -i 'nvme'", $this->getFullId())))) {
+                    return '-';
+                }
+
+                return 'NVMe';
         }
     }
 

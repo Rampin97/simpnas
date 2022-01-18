@@ -15,7 +15,7 @@ class Extra
         return Functions::redirect(
             $request,
             $response,
-            $user->isLoggedIn() ? 'dashboard' : 'login',
+            $user->isLoggedIn() ? 'account.dashboard' : 'login',
             302
         );
     }
