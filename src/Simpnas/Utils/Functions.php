@@ -1,12 +1,12 @@
 <?php
 
-namespace Simpnas;
+namespace Simpnas\Utils;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
 
-class Utils
+class Functions
 {
 
     public const cacheFolder = __DIR__ . '/../../cache';

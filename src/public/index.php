@@ -4,7 +4,7 @@ use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
 use Simpnas\SimpleVars;
 use Simpnas\User;
-use Simpnas\Utils;
+use Simpnas\Utils\Functions;
 use Slim\Flash\Messages;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
@@ -22,11 +22,11 @@ $builder = new ContainerBuilder();
 
 $builder->addDefinitions([
     Twig::class => DI\factory(static function (SimpleVars $simpleVars, Messages $messages, User $user) {
-        $cache = Utils::isCacheEnabled();
+        $cache = Functions::isCacheEnabled();
 
         $twig = Twig::create(__DIR__ . '/../templates', [
             'debug' => !$cache,
-            'cache' => $cache ? Utils::cacheFolder : false
+            'cache' => $cache ? Functions::cacheFolder : false
         ]);
 
         $twig->addExtension($simpleVars);
@@ -50,10 +50,10 @@ $builder->addDefinitions([
     })
 ]);
 
-if (Utils::isCacheEnabled()) {
-    $builder->enableCompilation(Utils::cacheFolder);
+if (Functions::isCacheEnabled()) {
+    $builder->enableCompilation(Functions::cacheFolder);
     // $builder->enableDefinitionCache();
-    $builder->writeProxiesToFile(true, Utils::cacheFolder);
+    $builder->writeProxiesToFile(true, Functions::cacheFolder);
 }
 
 try {
@@ -63,9 +63,9 @@ try {
     (require(__DIR__ . '/../Simpnas/Routes/setup.php'))($app);
     (require(__DIR__ . '/../Simpnas/Routes/actions.php'))($app);
 
-    if (Utils::isCacheEnabled()) {
+    if (Functions::isCacheEnabled()) {
         $routeCollector = $app->getRouteCollector();
-        $routeCollector->setCacheFile(Utils::cacheFolder . "/routes.php");
+        $routeCollector->setCacheFile(Functions::cacheFolder . "/routes.php");
     }
 
     $app->addBodyParsingMiddleware();

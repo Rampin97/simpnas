@@ -1,0 +1,19 @@
+{% macro generateProgressBar(percent) %}
+    <div class="progress">
+        <div
+                {% if percent > 70 %}
+                    class="progress-bar bg-warning"
+                {% elseif percent > 90 %}
+                    class="progress-bar bg-danger"
+                {% else %}
+                    class="progress-bar bg-success"
+                {% endif %}
+                role="progressbar"
+                style="width: {{ percent }}%;"
+                aria-valuenow="{{ percent }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+        >{{ percent }}%
+        </div>
+    </div>
+{% endmacro %}

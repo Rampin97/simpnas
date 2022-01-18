@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Simpnas\User;
-use Simpnas\Utils;
+use Simpnas\Utils\Functions;
 use Slim\App;
 
 class UserLoggedIn implements MiddlewareInterface
@@ -35,7 +35,7 @@ class UserLoggedIn implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        return Utils::redirect(
+        return Functions::redirect(
             $request,
             $this->app->getResponseFactory()->createResponse(),
             'login',

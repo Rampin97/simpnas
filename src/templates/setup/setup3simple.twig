@@ -28,7 +28,7 @@
                     <label for="inputDisk" class="form-label">Select Disk</label>
                     <select aria-describedby="diskHelp" name="disk" id="inputDisk" class="form-select form-select-lg" required>
                         {% for d in diskOptions %}
-                            <option value="{{ d['id']|e('html_attr') }}">{{ d['id'] }} {{ d['vendor'] }} ({{ d['size'] }}B)</option>
+                            <option value="{{ d.getId()|e('html_attr') }}">{{ d }}</option>
                         {% endfor %}
                     </select>
                     <div id="diskHelp" class="form-text"><strong>Warning:</strong> This will <u>Delete</u> all Data on the selected Storage Device.</div>

@@ -45,8 +45,8 @@
                 <div class="mb-3">
                     {% for d in diskOptions %}
                         <div class="form-check form-switch">
-                            <input checked value="{{ d['id']|e('html_attr') }}" name="disks[]" class="form-check-input" type="checkbox" role="switch" id="switchDisk--{{ d['id']|e('html_attr') }}">
-                            <label class="form-check-label" for="switchDisk--{{ d['id']|e('html_attr') }}">{{ d['id'] }} {{ d['vendor'] }} ({{ d['size'] }}B)</label>
+                            <input checked value="{{ d.getId()|e('html_attr') }}" name="disks[]" class="form-check-input" type="checkbox" role="switch" id="switchDisk--{{ d.getId()|e('html_attr') }}">
+                            <label class="form-check-label" for="switchDisk--{{ d.getId()|e('html_attr') }}">{{ d }}</label>
                         </div>
                     {% endfor %}
                 </div>

@@ -5,7 +5,7 @@ namespace Simpnas\Controllers\Actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Simpnas\SimpleVars;
-use Simpnas\Utils;
+use Simpnas\Utils\Functions;
 use Slim\Flash\Messages;
 
 
@@ -16,11 +16,11 @@ class Setup
 
         $data = $request->getParsedBody();
 
-        if (!Utils::isFakeEnabled()) {
+        if (!Functions::isFakeEnabled()) {
             exec(sprintf('timedatectl set-timezone %s', escapeshellarg($data['timezone'])));
         }
 
-        return Utils::redirect(
+        return Functions::redirect(
             $request,
             $response,
             'setup.step2',
@@ -32,7 +32,7 @@ class Setup
 
         $data = $request->getParsedBody();
 
-        if (!Utils::isFakeEnabled()) {
+        if (!Functions::isFakeEnabled()) {
             $hostname = $data['hostname'];
             $interface = $data['interface'];
             $method = strtolower($data['method']);
@@ -74,7 +74,7 @@ class Setup
             }
         }
 
-        return Utils::redirect(
+        return Functions::redirect(
             $request,
             $response,
             'setup.step3.simple',
@@ -86,7 +86,7 @@ class Setup
     {
         $data = $request->getParsedBody();
 
-        if (!Utils::isFakeEnabled()) {
+        if (!Functions::isFakeEnabled()) {
             $volumeName = $data['volumeName'];
             $disk = $data['disk'];
 
@@ -108,7 +108,7 @@ class Setup
             fclose($fh);
         }
 
-        return Utils::redirect(
+        return Functions::redirect(
             $request,
             $response,
             'setup.step4',
@@ -128,7 +128,7 @@ class Setup
 
         if ($disksCount < 2) {
             $messages->addMessage('error', 'Select at least 2 disks');
-            return Utils::redirect(
+            return Functions::redirect(
                 $request,
                 $response,
                 'setup.step3.raid',
@@ -136,7 +136,7 @@ class Setup
             );
         }
 
-        if (!Utils::isFakeEnabled()) {
+        if (!Functions::isFakeEnabled()) {
 
             //find and stop any arrays
             exec("ls /dev/md*",$md_array);
@@ -174,7 +174,7 @@ class Setup
             fclose($fh);
         }
 
-        return Utils::redirect(
+        return Functions::redirect(
             $request,
             $response,
             'setup.step4',
@@ -188,7 +188,7 @@ class Setup
 
         $simpleVars->setDatabaseKey(SimpleVars::DBKEY_SETUP, true);
 
-        if (!Utils::isFakeEnabled()) {
+        if (!Functions::isFakeEnabled()) {
             $volumeName = exec("ls /volumes");
             $username = $data['username'];
             $password = $data['password'];
@@ -240,7 +240,7 @@ class Setup
             exec("systemctl start filebrowser");
         }
 
-        return Utils::redirect(
+        return Functions::redirect(
             $request,
             $response,
             'setup.complete',

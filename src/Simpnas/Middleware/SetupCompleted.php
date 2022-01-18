@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Simpnas\SimpleVars;
-use Simpnas\Utils;
+use Simpnas\Utils\Functions;
 use Slim\App;
 
 class SetupCompleted implements MiddlewareInterface
@@ -32,7 +32,7 @@ class SetupCompleted implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        return Utils::redirect(
+        return Functions::redirect(
             $request,
             $this->app->getResponseFactory()->createResponse(),
             'setup.welcome',

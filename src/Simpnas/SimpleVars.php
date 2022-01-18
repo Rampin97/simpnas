@@ -109,12 +109,21 @@ class SimpleVars extends AbstractExtension
             'getServerMemoryUsage',
             'getServerCpuUsage',
             'getDatabaseKey',
-            'setDatabaseKey'
+            'setDatabaseKey',
+            'isServiceRunning'
         ];
 
         return array_map(function ($name) {
             return new TwigFunction($name, [$this, $name]);
         }, $list);
+    }
+
+    /**
+     * @param string $service
+     * @return bool
+     */
+    public function isServiceRunning(string $service): bool {
+        return mb_strpos(exec(sprintf("systemctl status %s | grep running", escapeshellarg($service))), 'running') !== false;
     }
 
     /**

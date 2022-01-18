@@ -2,6 +2,7 @@
 
 namespace Simpnas;
 
+use Simpnas\Utils\Functions;
 use Slim\Flash\Messages;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -48,7 +49,7 @@ class User extends AbstractExtension
         $cmd = sprintf('bash %s %s %s', $file, escapeshellarg($username), escapeshellarg($password));
         $result = exec($cmd);
 
-        if ($result === "ok" || Utils::isFakeEnabled()) {
+        if ($result === "ok" || Functions::isFakeEnabled()) {
             $_SESSION['logged'] = true;
             $_SESSION['username'] = $username;
 

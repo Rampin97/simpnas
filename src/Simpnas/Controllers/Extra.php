@@ -6,13 +6,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Simpnas\SimpleConst;
 use Simpnas\User;
-use Simpnas\Utils;
+use Simpnas\Utils\Functions;
 
 class Extra
 {
 
     public function index(Request $request, Response $response, User $user): Response {
-        return Utils::redirect(
+        return Functions::redirect(
             $request,
             $response,
             $user->isLoggedIn() ? 'dashboard' : 'login',
@@ -27,7 +27,7 @@ class Extra
             ->withPath('')
             ->withQuery('');
 
-        return Utils::redirect(
+        return Functions::redirect(
             $request,
             $response,
             (string) $uri,
