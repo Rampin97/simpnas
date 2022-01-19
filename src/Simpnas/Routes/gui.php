@@ -39,8 +39,20 @@ return static function (App $app) {
             $group->get('/dashboard', [Dashboard::class, 'dashboard'])
                 ->setName('account.dashboard');
 
-            $group->get('/disks', [Storage::class, 'disks'])
-                ->setName('account.disks');
+            $group->group('/storage', function (RouteCollectorProxy $group) {
+                $group->get('/disks', [Storage::class, 'disks'])
+                    ->setName('account.disks');
+
+                $group->group('/volumes', function (RouteCollectorProxy $group) {
+                    $group->get('', [Storage::class, 'volumes'])
+                        ->setName('account.volumes');
+
+                    $group->get('/create/simple', [Storage::class, 'createSimpleVolume'])
+                        ->setName('account.volumes.add.simple');
+                    $group->get('/create/raid', [Storage::class, 'createRaidVolume'])
+                        ->setName('account.volumes.add.raid');
+                });
+            });
 
         })->add(UserLoggedIn::class);
 

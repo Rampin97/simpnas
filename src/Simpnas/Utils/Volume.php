@@ -73,6 +73,17 @@ class Volume extends StorageInfo
     }
 
     /**
+     * @return string
+     */
+    public function getRaidRawInfo(): string {
+        if ($this->getRaid() >= 0) {
+            return shell_exec("mdadm -D " . escapeshellarg($this->getDisk()->getFullId()));
+        }
+
+        return '';
+    }
+
+    /**
      * @return Disk[]
      */
     public function getRaidDisks(): array {
@@ -133,6 +144,13 @@ class Volume extends StorageInfo
      */
     public function isCrypt(): bool {
         return !empty(exec(sprintf("lsblk -o PKNAME,PATH,TYPE | grep %s | grep crypt", $this->getDisk()->getId())));
+    }
+
+    /**
+     * @return bool
+     */
+    public function canUnlock(): bool {
+        return file_exists($this->getFullId() . "/.uuid_map");
     }
 
 }

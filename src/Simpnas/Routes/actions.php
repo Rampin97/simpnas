@@ -4,16 +4,37 @@ namespace Simpnas\Routes;
 
 
 use Simpnas\Controllers\Actions\Setup;
+use Simpnas\Controllers\Actions\Volume;
 use Simpnas\Controllers\Login;
+use Simpnas\Middleware\SetupCompleted;
 use Simpnas\Middleware\SetupTodo;
+use Simpnas\Middleware\UserLoggedIn;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
 return static function (App $app) {
     $app->group('/actions', function (RouteCollectorProxy $group) {
 
-        $group->post('/login', [Login::class, 'check'])
-            ->setName('actions.login');
+        $group->group('', function (RouteCollectorProxy $group) {
+            $group->group('', function (RouteCollectorProxy $group) {
+
+                $group->group('/volumes', function (RouteCollectorProxy $group) {
+                    $group->post('/delete', [Volume::class, 'delete'])
+                        ->setName('actions.volumes.delete');
+                    $group->post('/unlock', [Volume::class, 'unlock'])
+                        ->setName('actions.volumes.unlock');
+                    $group->post('/add/simple', [Volume::class, 'addSimple'])
+                        ->setName('actions.volumes.add.simple');
+                    $group->post('/add/raid', [Volume::class, 'addRaid'])
+                        ->setName('actions.volumes.add.raid');
+                });
+
+            })->add(UserLoggedIn::class);
+
+            $group->post('/login', [Login::class, 'check'])
+                ->setName('actions.login');
+
+        })->add(SetupCompleted::class);
 
         $group->group('/setup', function (RouteCollectorProxy $group) {
             $group->post('/step1', [Setup::class, 'step1'])

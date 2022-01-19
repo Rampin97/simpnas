@@ -1,0 +1,18 @@
+{% extends 'base/admin.twig' %}
+{% import "base/utils.twig" as utils %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Volumes</h1>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{{ full_url_for('account.volumes.add.simple') }}" type="button" class="btn btn-outline-secondary">
+                <span data-feather="hard-drive"></span>
+                Rescan
+            </a>
+        </div>
+    </div>
+
+    <h2 class="h4">Create simple volume</h2>
+
+{% endblock %}
