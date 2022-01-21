@@ -33,13 +33,15 @@ class Storage
 
     public function createSimpleVolume(Response $response): Response {
         return $this->twig->render($response, 'account/volumes/createSimple.twig', [
-            'title' => ['Volumes', 'Create Simple']
+            'title' => ['Volumes', 'Create Simple'],
+            'diskOptions' => Disk::getStorageDisks(true)
         ]);
     }
 
     public function createRaidVolume(Response $response): Response {
         return $this->twig->render($response, 'account/volumes/createRaid.twig', [
-            'title' => ['Volumes', 'Create Raid']
+            'title' => ['Volumes', 'Create Raid'],
+            'diskOptions' => Disk::getStorageDisks(true)
         ]);
     }
 

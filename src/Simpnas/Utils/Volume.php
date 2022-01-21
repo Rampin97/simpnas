@@ -13,6 +13,8 @@ class Volume extends StorageInfo
         parent::__construct($id, self::volumesPath);
     }
 
+
+
     /**
      * @return Volume[]
      */
@@ -103,7 +105,7 @@ class Volume extends StorageInfo
      * @param bool $formatted
      * @return string
      */
-    private function getSpaceInfo(int $print, $formatted = true): string {
+    private function getSpaceInfo(int $print, bool $formatted = true): string {
         $cmd = $formatted ? 'df -h' : 'df';
         return exec(sprintf("%s | grep -w %s | awk '{print $%s}'", $cmd, $this->getFullId(), $print));
     }
@@ -112,7 +114,7 @@ class Volume extends StorageInfo
      * @param bool $formatted
      * @return string
      */
-    public function getTotalSpace($formatted = true): string {
+    public function getTotalSpace(bool $formatted = true): string {
         return $this->getSpaceInfo(2, $formatted);
     }
 
@@ -120,7 +122,7 @@ class Volume extends StorageInfo
      * @param bool $formatted
      * @return string
      */
-    public function getUsedSpace($formatted = true): string {
+    public function getUsedSpace(bool $formatted = true): string {
         return $this->getSpaceInfo(3, $formatted);
     }
 
@@ -128,7 +130,7 @@ class Volume extends StorageInfo
      * @param bool $formatted
      * @return string
      */
-    public function getFreeSpace($formatted = true): string {
+    public function getFreeSpace(bool $formatted = true): string {
         return $this->getSpaceInfo(4, $formatted);
     }
 

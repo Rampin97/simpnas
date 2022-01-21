@@ -25,15 +25,55 @@ class Disk extends StorageInfo
         return new Disk(self::getOsDiskId());
     }
 
+
     /**
-     * @return Disk[]
+     * @param bool $onlyForNewVolumes
+     * @return array
      */
-    public static function getStorageDisks(): array {
+    public static function getStorageDisks(bool $onlyForNewVolumes = false): array {
         exec(sprintf("lsblk -n -o KNAME,TYPE | grep disk | grep -v zram | grep -v %s | awk '{print $1}'", escapeshellarg(self::getOsDiskId())), $disksList);
+
+        $excludeList = [];
+
+        if ($onlyForNewVolumes) {
+            //CRYPT UNMOUNTED
+            exec("ls -a /volumes/*/.uuid_map",$unmountedCryptList);
+            $unmountedCryptUuidList = [];
+
+            foreach($unmountedCryptList as $unmountedCrypt) {
+                exec("cat $unmountedCrypt", $unmountedCryptUuidList);
+            }
+
+            foreach($unmountedCryptUuidList as $unmountedCryptUuid){
+                exec("lsblk -o PKNAME,NAME,UUID | grep $unmountedCryptUuid | awk '{print $1}'", $excludeList);
+            }
+
+            //CRYPT MOUNTED
+            exec("lsblk -o PKNAME,NAME,TYPE | grep crypt | awk '{print $1}'", $mountedCryptDiskpartsList);
+            foreach($mountedCryptDiskpartsList as $mountedCryptDiskpart){
+                exec("lsblk -o PKNAME,NAME | grep $mountedCryptDiskpart | awk '{print $1}'", $excludeList);
+            }
+
+            exec("lsblk -n -o pkname,mountpoint | grep -w volumes | awk '{print $1}'", $excludeList);
+            exec("lsblk -n -o pkname,mountpoint | grep -w / | awk '{print $1}'", $excludeList); //adds OS Drive to the array
+
+            //RAID
+            exec("lsblk -n -o PKNAME,TYPE | grep raid | awk '{print $1}'", $raidsList);
+            foreach($raidsList as $raid) {
+                exec("lsblk -n -o PKNAME,PATH | grep /dev/$raid | awk '{print $1}'", $excludeList);
+            }
+        }
+
+        if (Functions::isFakeEnabled()) {
+            $disksList[] = 'abc1';
+            $disksList[] = 'abc2';
+            $disksList[] = 'abc3';
+            $disksList[] = 'abc4';
+        }
 
         return array_map(static function (string $id) {
             return new Disk($id);
-        }, $disksList);
+        }, array_diff($disksList, $excludeList));
     }
 
     /**

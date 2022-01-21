@@ -95,12 +95,138 @@ class Volume
         );
     }
 
-    public function addSimple(Request $request, Response $response): Response {
-        return $response;
+    public function addSimple(Request $request, Response $response, Messages $messages): Response {
+        $data = $request->getParsedBody();
+
+        $volumeName = trim($data['volumeName']);
+        $disk = $data['disk'];
+        $password = $data['password'];
+
+        exec("ls /volumes/",$volumesList);
+
+        if (in_array($volumeName, $volumesList, true)) {
+            $messages->addMessage('error', "Can not add volume $volumeName as it already exists!");
+
+            return Functions::redirect(
+                $request,
+                $response,
+                'account.volumes.add.simple',
+                303
+            );
+        }
+
+        if (!Functions::isFakeEnabled()) {
+
+            exec("wipefs -a /dev/$disk");
+            exec("(echo g; echo n; echo p; echo 1; echo; echo; echo w) | fdisk /dev/$disk");
+            $diskpart = exec("lsblk -o PKNAME,KNAME,TYPE /dev/$disk | grep part | awk '{print $2}'");
+            //WIPE out any superblocks
+            exec("mdadm --zero-superblock /dev/$diskpart");
+            exec("e2label /dev/$diskpart $volumeName");
+            exec("mkdir /volumes/$volumeName");
+
+            if (count($password) > 0) {
+                exec("echo $password | cryptsetup -q luksFormat /dev/$diskpart");
+                exec("echo $password | cryptsetup open /dev/$diskpart $volumeName");
+                exec("mkfs.ext4 -F /dev/mapper/$volumeName");
+                $uuid = exec("blkid -o value --match-tag UUID /dev/$diskpart");
+                exec("echo $uuid > /volumes/$volumeName/.uuid_map");
+                exec("mount /dev/mapper/$volumeName /volumes/$volumeName");
+            } else {
+                exec("mkfs.ext4 -F /dev/$diskpart");
+                exec("mount /dev/$diskpart /volumes/$volumeName");
+
+                $uuid = exec("blkid -o value --match-tag UUID /dev/$diskpart");
+
+                $myFile = "/etc/fstab";
+                $fh = fopen($myFile, 'ab') or die("can't open file");
+                $stringData = "UUID=$uuid /volumes/$volumeName ext4 defaults 0 1\n";
+                fwrite($fh, $stringData);
+                fclose($fh);
+            }
+
+        }
+
+        return Functions::redirect(
+            $request,
+            $response,
+            'account.volumes',
+            303
+        );
     }
 
-    public function addRaid(Request $request, Response $response): Response {
-        return $response;
+    public function addRaid(Request $request, Response $response, Messages $messages): Response {
+        $data = $request->getParsedBody();
+
+        $volumeName = trim($data['volumeName']);
+        $disks = $data['disks'];
+        $raid = $data['raid'];
+
+        exec("ls /volumes/",$volumesList);
+
+        if (in_array($volumeName, $volumesList, true)) {
+            $messages->addMessage('error', "Can not add volume $volumeName as it already exists!");
+
+            return Functions::redirect(
+                $request,
+                $response,
+                'account.volumes.add.simple',
+                303
+            );
+        }
+
+        $disksCount = count($disks);
+
+        if ($disksCount < 2) {
+            $messages->addMessage('error', 'Select at least 2 disks');
+            return Functions::redirect(
+                $request,
+                $response,
+                'account.volumes.add.raid',
+                303
+            );
+        }
+
+        if (!Functions::isFakeEnabled()) {
+
+            // Remove Superblocks on selected disks and wipe any partition info
+            foreach ($disks as $disk) {
+                exec("mdadm --zero-superblock /dev/$disk");
+                exec("wipefs -a /dev/$disk");
+            }
+
+            //prefix /dev/ to each var in the array so instead of sda it would be /dev/sda
+            $fullDiskList = implode(' ', preg_filter('/^/', '/dev/', $disks));
+
+            //get the last md#
+            $currentMd = exec("ls /dev/md*");
+            //Generate the next /dev/mdX Number
+            $newMd = ((int) preg_replace('/\D/', '', $currentMd)) + 1;
+
+            exec("yes | mdadm --create --verbose /dev/md$newMd --level=$raid --raid-devices=$disksCount " . $fullDiskList);
+
+            exec("mkdir /volumes/$volumeName");
+
+            exec("mkfs.ext4 -F /dev/md$newMd");
+
+            exec("mount /dev/md$newMd /volumes/$volumeName");
+
+            // To make sure that the array is reassembled automatically at boot
+            // exec ("mdadm --detail --scan | tee -a /etc/mdadm/mdadm.conf");
+
+            $uuid = exec("blkid -o value --match-tag UUID /dev/md$newMd");
+
+            $fh = fopen("/etc/fstab", 'ab') or die("can't open file");
+            fwrite($fh, "UUID=$uuid /volumes/$volumeName ext4 defaults 0 0\n");
+            fclose($fh);
+        }
+
+        return Functions::redirect(
+            $request,
+            $response,
+            'account.volumes',
+            303
+        );
     }
 
 }

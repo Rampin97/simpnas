@@ -13,6 +13,39 @@
         </div>
     </div>
 
-    <h2 class="h4">Create simple volume</h2>
+    {% if diskOptions|length > 0 %}
+        <form method="POST" action="{{ full_url_for('actions.volumes.add.simple') }}">
+            <fieldset>
+                <legend>Volume Creation <small>Simple</small></legend>
+
+                <div class="mb-3">
+                    <label for="inputDisk" class="form-label">Select Disk</label>
+                    <select aria-describedby="diskHelp" name="disk" id="inputDisk" class="form-select" required>
+                        {% for d in diskOptions %}
+                            <option value="{{ d.getId()|e('html_attr') }}">{{ d }}</option>
+                        {% endfor %}
+                    </select>
+                    <div id="diskHelp" class="form-text"><strong>Warning:</strong> This will <u>Delete</u> all Data on the selected Storage Device.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="inputVolumeName" class="form-label">Volume Name</label>
+                    <input placeholder="Volume Name" required name="volumeName" type="text" class="form-control" id="inputVolumeName" pattern="[a-zA-Z0-9-_]{1,15}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="inputPassword" class="form-label">Encryption Key</label>
+                    <input aria-describedby="passwordHelp" placeholder="Password" name="password" type="password" class="form-control" id="inputPassword">
+                    <div id="passwordHelp" class="form-text">Leave empty if you don't want to encrpt the volume</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Submit <i data-feather="check"></i></button>
+            </fieldset>
+        </form>
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+            No disks available to create a new volume <a href="{{ full_url_for('account.volumes.add.simple') }}" class="alert-link">Rescan for new Disks</a>
+        </div>
+    {% endif %}
 
 {% endblock %}
