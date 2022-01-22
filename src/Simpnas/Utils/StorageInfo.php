@@ -10,7 +10,7 @@ class StorageInfo
 
     public function __construct(string $id, string $prefix)
     {
-        $this->id = $id;
+        $this->id = basename($id);
         $this->prefix = $prefix;
     }
 

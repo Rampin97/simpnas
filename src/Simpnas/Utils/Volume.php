@@ -6,14 +6,10 @@ namespace Simpnas\Utils;
 class Volume extends StorageInfo
 {
 
-    public const volumesPath = 'volumes';
-
     public function __construct(string $id)
     {
-        parent::__construct($id, self::volumesPath);
+        parent::__construct($id, 'volumes');
     }
-
-
 
     /**
      * @return Volume[]

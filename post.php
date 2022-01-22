@@ -140,7 +140,7 @@ if(isset($_GET['enable_user'])){
   header("Location: users.php");
 }
 
-if(isset($_POST['group_add'])){
+if(isset($_POST['group_add'])) {
   $group = $_POST['group'];
 
   //check if group exists
