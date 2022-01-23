@@ -32,7 +32,7 @@
             </thead>
             <tbody>
             {% for v in volumeList %}
-                <tr>
+                <tr class="align-middle">
                     <td><span class="mr-2" data-feather="database"></span> {{ v.getId() }}</td>
                     <td><span class="mr-2" data-feather="hard-drive"></span> {{ v.getDisk().getId() }}</td>
                     <td>
@@ -97,7 +97,7 @@
 
             {% if v.canUnlock() %}
                 <div class="modal fade" id="unlockModal--{{ v.getId()|e('html_attr') }}" tabindex="-1" aria-labelledby="unlockLabel--{{ v.getId()|e('html_attr') }}" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog">
                         <form method="POST" action="{{ full_url_for('actions.volumes.unlock') }}">
                             <input type="hidden" name="volume" value="{{ v.getId()|e('html_attr') }}">
                             <input type="hidden" name="disk" value="{{ v.getDisk().getId()|e('html_attr') }}">
@@ -121,7 +121,7 @@
             {% endif %}
 
             <div class="modal fade" id="deleteModal--{{ v.getId()|e('html_attr') }}" tabindex="-1" aria-labelledby="deleteLabel--{{ v.getId()|e('html_attr') }}" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog">
                     <form method="POST" action="{{ full_url_for('actions.volumes.delete') }}">
                         <input type="hidden" name="volume" value="{{ v.getId()|e('html_attr') }}">
                         <div class="modal-content">

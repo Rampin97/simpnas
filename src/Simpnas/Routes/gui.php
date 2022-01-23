@@ -6,6 +6,7 @@ use Simpnas\Controllers\Dashboard;
 use Simpnas\Controllers\Extra;
 use Simpnas\Controllers\Login;
 use Simpnas\Controllers\Power;
+use Simpnas\Controllers\Shares;
 use Simpnas\Controllers\Storage;
 use Simpnas\Middleware\SetupCompleted;
 use Simpnas\Middleware\UserLoggedIn;
@@ -51,6 +52,20 @@ return static function (App $app) {
                         ->setName('account.volumes.add.simple');
                     $group->get('/create/raid', [Storage::class, 'createRaidVolume'])
                         ->setName('account.volumes.add.raid');
+                });
+            });
+
+            $group->group('/users-and-share', function (RouteCollectorProxy $group) {
+
+                $group->group('/users', function (RouteCollectorProxy $group) {
+                    $group->get('', [Shares::class, 'users'])
+                        ->setName('account.users');
+
+                    $group->get('/create', [Shares::class, 'createUser'])
+                        ->setName('account.users.create');
+
+                    $group->get('/edit/{username}', [Shares::class, 'editUser'])
+                        ->setName('account.users.edit');
                 });
             });
 

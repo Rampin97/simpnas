@@ -54,21 +54,19 @@ class User
             throw new RuntimeException(sprintf('Directory "%s" was not created', $homeDir));
         }
 
-        exec("mkdir $userDir");
-        exec("chmod -R 700 $userDir");
+        exec("mkdir " . escapeshellarg($userDir));
+        exec("chmod -R 700 " . escapeshellarg($userDir));
 
-        $comment = escapeshellarg($comment);
-
-        exec ("useradd -g users -d $userDir $username -c $comment -s /bin/false");
+        exec (sprintf("useradd -g users -d %s %s -c %s -s /bin/false", escapeshellarg($userDir), escapeshellarg($username), escapeshellarg($comment)));
         exec ("echo '$password\n$password' | passwd " . escapeshellarg($username));
         exec ("echo '$password\n$password' | smbpasswd -a " . escapeshellarg($username));
 
         //Create the user under file browser
         exec("systemctl stop filebrowser");
-        exec ("filebrowser -d /usr/local/etc/filebrowser.db users add $username $password --scope $userDir");
+        exec (sprintf("filebrowser -d /usr/local/etc/filebrowser.db users add %s %s --scope %s", escapeshellarg($username), escapeshellarg($password), escapeshellarg($userDir)));
         exec("systemctl start filebrowser");
 
-        exec ("chown -R $username $userDir");
+        exec("chown -R " . escapeshellarg($username) . " " . escapeshellarg($userDir));
 
         $user = new User($username, false);
         $user->setGroups($groups);
@@ -128,7 +126,7 @@ class User
             return [];
         }
 
-        return explode(' ', $cmd);
+        return explode(' ', trim($cmd));
     }
 
     /**

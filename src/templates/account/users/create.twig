@@ -1,0 +1,47 @@
+{% extends 'base/admin.twig' %}
+{% import "base/utils.twig" as utils %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Users</h1>
+    </div>
+
+    <form method="POST" action="{{ full_url_for('actions.user.add') }}">
+        <fieldset>
+            <legend>Create user</legend>
+
+            <div class="mb-3">
+                <label for="inputUsername" class="form-label">Username</label>
+                <input placeholder="Username" required autofocus name="username" type="text" class="form-control"
+                       id="inputUsername" pattern="[a-z0-9]{1,20}">
+            </div>
+
+            <div class="mb-3">
+                <label for="inputPassword" class="form-label">Password</label>
+                <input required placeholder="Password" name="password" type="password" class="form-control"
+                       id="inputPassword">
+            </div>
+
+            <div class="mb-3">
+                <label for="inputDesc" class="form-label">Description</label>
+                <input placeholder="Description" name="comment" type="text" class="form-control" id="inputDesc">
+            </div>
+
+            <legend>Groups</legend>
+
+            <div class="mb-3">
+                {% for g in groupList %}
+                    <div class="form-check form-switch">
+                        <input value="{{ g.getName()|e('html_attr') }}" name="groups[]" class="form-check-input"
+                               type="checkbox" role="switch" id="switchGroup--{{ g.getName()|e('html_attr') }}">
+                        <label class="form-check-label"
+                               for="switchGroup--{{ g.getName()|e('html_attr') }}">{{ g.getName() }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit <i data-feather="check"></i></button>
+        </fieldset>
+    </form>
+
+{% endblock %}

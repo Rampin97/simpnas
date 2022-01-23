@@ -4,6 +4,7 @@ namespace Simpnas\Routes;
 
 
 use Simpnas\Controllers\Actions\Setup;
+use Simpnas\Controllers\Actions\User;
 use Simpnas\Controllers\Actions\Volume;
 use Simpnas\Controllers\Login;
 use Simpnas\Middleware\SetupCompleted;
@@ -27,6 +28,17 @@ return static function (App $app) {
                         ->setName('actions.volumes.add.simple');
                     $group->post('/add/raid', [Volume::class, 'addRaid'])
                         ->setName('actions.volumes.add.raid');
+                });
+
+                $group->group('/users', function (RouteCollectorProxy $group) {
+                    $group->post('/delete', [User::class, 'delete'])
+                        ->setName('actions.users.delete');
+                    $group->post('/edit', [User::class, 'edit'])
+                        ->setName('actions.user.edit');
+                    $group->post('/add', [User::class, 'add'])
+                        ->setName('actions.user.add');
+                    $group->post('/disabled', [User::class, 'disabled'])
+                        ->setName('actions.user.disabled');
                 });
 
             })->add(UserLoggedIn::class);

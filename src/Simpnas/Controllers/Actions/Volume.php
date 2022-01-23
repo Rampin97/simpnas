@@ -159,7 +159,7 @@ class Volume
         $data = $request->getParsedBody();
 
         $volumeName = trim($data['volumeName']);
-        $disks = $data['disks'];
+        $disks = $data['disks'] ?? [];
         $raid = $data['raid'];
 
         exec("ls /volumes/",$volumesList);

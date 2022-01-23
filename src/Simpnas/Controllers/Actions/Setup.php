@@ -121,7 +121,7 @@ class Setup
         $data = $request->getParsedBody();
 
         $volumeName = $data['volumeName'];
-        $disks = $data['disks'];
+        $disks = $data['disks'] ?? [];
         $raid = $data['raid'];
 
         $disksCount = count($disks);
