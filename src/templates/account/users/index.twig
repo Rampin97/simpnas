@@ -84,7 +84,7 @@
 
         <div class="modal fade" id="disabledModal--{{ u.getUsername()|e('html_attr') }}" tabindex="-1" aria-labelledby="disabledLabel--{{ u.getUsername()|e('html_attr') }}" aria-hidden="true">
             <div class="modal-dialog">
-                <form method="POST" action="{{ full_url_for('actions.user.disabled') }}">
+                <form method="POST" action="{{ full_url_for('actions.users.disabled') }}">
                     <input type="hidden" name="username" value="{{ u.getUsername()|e('html_attr') }}">
                     <div class="modal-content">
                         <div class="modal-header">

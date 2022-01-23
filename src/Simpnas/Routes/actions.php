@@ -3,6 +3,7 @@
 namespace Simpnas\Routes;
 
 
+use Simpnas\Controllers\Actions\Group;
 use Simpnas\Controllers\Actions\Setup;
 use Simpnas\Controllers\Actions\User;
 use Simpnas\Controllers\Actions\Volume;
@@ -34,11 +35,20 @@ return static function (App $app) {
                     $group->post('/delete', [User::class, 'delete'])
                         ->setName('actions.users.delete');
                     $group->post('/edit', [User::class, 'edit'])
-                        ->setName('actions.user.edit');
+                        ->setName('actions.users.edit');
                     $group->post('/add', [User::class, 'add'])
-                        ->setName('actions.user.add');
+                        ->setName('actions.users.add');
                     $group->post('/disabled', [User::class, 'disabled'])
-                        ->setName('actions.user.disabled');
+                        ->setName('actions.users.disabled');
+                });
+
+                $group->group('/groups', function (RouteCollectorProxy $group) {
+                    $group->post('/delete', [Group::class, 'delete'])
+                        ->setName('actions.groups.delete');
+                    $group->post('/edit', [Group::class, 'edit'])
+                        ->setName('actions.groups.edit');
+                    $group->post('/add', [Group::class, 'add'])
+                        ->setName('actions.groups.add');
                 });
 
             })->add(UserLoggedIn::class);

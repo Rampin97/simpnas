@@ -3,6 +3,7 @@
 namespace Simpnas\Utils;
 
 use InvalidArgumentException;
+use RuntimeException;
 
 class Group
 {
@@ -99,9 +100,14 @@ class Group
     /**
      * @param string $newName
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      * @return void
      */
     public function setName(string $newName): void {
+        if (!$this->canEdit()) {
+            throw new RuntimeException("You can't edit or delete this group");
+        }
+
         //check if group exists
         exec("awk -F: '$3 > 999 {print $1}' /etc/group", $groupList);
         exec("awk -F: '$3 < 999 {print $1}' /etc/group", $systemGroupsList);
@@ -132,9 +138,14 @@ class Group
 
     /**
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      * @return void
      */
     public function delete(): void {
+        if (!$this->canEdit()) {
+            throw new RuntimeException("You can't edit or delete this group");
+        }
+
         exec("find /volumes/*/* -maxdepth 0 -type d -group ". $this->name ." -printf '%f\n'",$groupOwnedDirectoriesList);
 
         if(!empty($groupOwnedDirectoriesList)){

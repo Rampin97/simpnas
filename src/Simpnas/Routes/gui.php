@@ -67,6 +67,17 @@ return static function (App $app) {
                     $group->get('/edit/{username}', [Shares::class, 'editUser'])
                         ->setName('account.users.edit');
                 });
+
+                $group->group('/groups', function (RouteCollectorProxy $group) {
+                    $group->get('', [Shares::class, 'groups'])
+                        ->setName('account.groups');
+
+                    $group->get('/create', [Shares::class, 'createGroup'])
+                        ->setName('account.groups.create');
+
+                    $group->get('/edit/{name}', [Shares::class, 'editGroup'])
+                        ->setName('account.groups.edit');
+                });
             });
 
         })->add(UserLoggedIn::class);

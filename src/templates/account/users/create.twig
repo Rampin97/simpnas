@@ -6,7 +6,7 @@
         <h1 class="h2">Users</h1>
     </div>
 
-    <form method="POST" action="{{ full_url_for('actions.user.add') }}">
+    <form method="POST" action="{{ full_url_for('actions.users.add') }}">
         <fieldset>
             <legend>Create user</legend>
 
@@ -18,8 +18,7 @@
 
             <div class="mb-3">
                 <label for="inputPassword" class="form-label">Password</label>
-                <input required placeholder="Password" name="password" type="password" class="form-control"
-                       id="inputPassword">
+                <input required placeholder="Password" name="password" type="password" class="form-control" id="inputPassword">
             </div>
 
             <div class="mb-3">

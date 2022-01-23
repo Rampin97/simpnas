@@ -1,0 +1,80 @@
+{% extends 'base/admin.twig' %}
+{% import "base/utils.twig" as utils %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Groups</h1>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{{ full_url_for('account.groups.create') }}" type="button" class="btn btn-outline-secondary">
+                <span data-feather="plus"></span>
+                Add Group
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <tr>
+                <th>Group</th>
+                <th>Users</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for g in groupList %}
+                <tr class="align-middle">
+                    <td>
+                        <span class="mr-2" data-feather="users"></span>
+                        {{ g.getName() }}
+                    </td>
+                    <td>
+                        {% if g.getUsers()|length > 0 %}
+                            {{ g.getUsers()|map(u => "{u.getUsername()}")|join(', ') }}
+                        {% else %}
+                            <i>No users</i>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if g.canEdit() %}
+                            <a href="{{ full_url_for('account.groups.edit', {name: g.getName() }) }}" class="btn btn-outline-secondary"><span data-feather="edit"></span></a>
+                            <button data-bs-toggle="modal" data-bs-target="#deleteModal--{{ g.getName()|e('html_attr') }}" class="btn btn-outline-danger"><span data-feather="trash"></span></button>
+                        {% else %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="text-center py-3 h3" colspan="3">No groups available!</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% for g in groupList %}
+        <div class="modal fade" id="deleteModal--{{ g.getName()|e('html_attr') }}" tabindex="-1" aria-labelledby="deleteLabel--{{ g.getName()|e('html_attr') }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="POST" action="{{ full_url_for('actions.groups.delete') }}">
+                    <input type="hidden" name="name" value="{{ g.getName()|e('html_attr') }}">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteLabel--{{ g.getName()|e('html_attr') }}"><i>{{ g.getName() }}</i> delete confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p>Are you sure you want to delete <i>{{ g.getName() }}</i>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

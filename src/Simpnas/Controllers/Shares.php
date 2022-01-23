@@ -33,7 +33,29 @@ class Shares
 
     public function editUser(string $username, Response $response): Response {
         return $this->twig->render($response, 'account/users/edit.twig', [
-            'title' => ['Users', 'Edit user']
+            'title' => ['Users', 'Edit user'],
+            'groupList' => Group::getList(),
+            'editUser' => new User($username)
+        ]);
+    }
+
+    public function groups(Response $response): Response {
+        return $this->twig->render($response, 'account/groups/index.twig', [
+            'title' => ['Groups'],
+            'groupList' => Group::getList()
+        ]);
+    }
+
+    public function createGroup(Response $response): Response {
+        return $this->twig->render($response, 'account/groups/create.twig', [
+            'title' => ['Groups', 'Create group']
+        ]);
+    }
+
+    public function editGroup(string $name, Response $response): Response {
+        return $this->twig->render($response, 'account/groups/edit.twig', [
+            'title' => ['Groups', 'Edit group'],
+            'editGroup' => new Group($name)
         ]);
     }
 
