@@ -100,4 +100,12 @@ class NginxProxyManager extends AbstractService
     {
         return true;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getShareName(): ?string
+    {
+        return null;
+    }
 }

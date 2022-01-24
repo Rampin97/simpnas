@@ -187,16 +187,18 @@ class SimpleVars extends AbstractExtension
      * @return AbstractService[]
      */
     public function getApps(): array {
+        $dockerVolume = $this->getDockerVolume();
+
         return [
-            new Nextcloud(),
-            new Jellyfin(),
-            new PhotoPrism(),
-            new NginxProxyManager(),
-            new DAAPD(),
-            new Transmission(),
-            new BitwardenRS(),
-            new HomeAssistant(),
-            new UnifiController()
+            new Nextcloud($dockerVolume),
+            new Jellyfin($dockerVolume),
+            new PhotoPrism($dockerVolume),
+            new NginxProxyManager($dockerVolume),
+            new DAAPD($dockerVolume),
+            new Transmission($dockerVolume),
+            new BitwardenRS($dockerVolume),
+            new HomeAssistant($dockerVolume),
+            new UnifiController($dockerVolume)
         ];
     }
 

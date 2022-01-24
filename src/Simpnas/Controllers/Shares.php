@@ -4,17 +4,16 @@ namespace Simpnas\Controllers;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Simpnas\Utils\Group;
+use Simpnas\Utils\Share;
 use Simpnas\Utils\User;
+use Simpnas\Utils\Volume;
 use Slim\Views\Twig;
 
 class Shares
 {
 
-    private Twig $twig;
-
-    public function __construct(Twig $twig)
+    public function __construct(private Twig $twig)
     {
-        $this->twig = $twig;
     }
 
     public function users(Response $response): Response {
@@ -56,6 +55,30 @@ class Shares
         return $this->twig->render($response, 'account/groups/edit.twig', [
             'title' => ['Groups', 'Edit group'],
             'editGroup' => new Group($name)
+        ]);
+    }
+
+    public function shares(Response $response): Response {
+        return $this->twig->render($response, 'account/shares/index.twig', [
+            'title' => ['Shares'],
+            'shareList' => Share::getList()
+        ]);
+    }
+
+    public function createShare(Response $response): Response {
+        return $this->twig->render($response, 'account/shares/create.twig', [
+            'title' => ['Shares', 'Create share'],
+            'groupList' => Group::getList(),
+            'volumeList' => Volume::getList()
+        ]);
+    }
+
+    public function editShare(string $name, Response $response): Response {
+        return $this->twig->render($response, 'account/shares/edit.twig', [
+            'title' => ['Shares', 'Edit share'],
+            'editShare' => new Share($name),
+            'groupList' => Group::getList(),
+            'volumeList' => Volume::getList()
         ]);
     }
 

@@ -1,0 +1,56 @@
+{% extends 'base/admin.twig' %}
+{% import "base/utils.twig" as utils %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Shares</h1>
+    </div>
+
+    <form method="POST" action="{{ full_url_for('actions.shares.add') }}">
+        <fieldset>
+            <legend>Create share</legend>
+
+            <div class="mb-3">
+                <label for="inputName" class="form-label">Name</label>
+                <input placeholder="Name" required autofocus name="name" type="text" class="form-control"
+                       id="inputName" pattern="[a-zA-Z0-9-]{1,25}">
+            </div>
+
+            <div class="mb-3">
+                <label for="inputDesc" class="form-label">Description</label>
+                <input placeholder="Description" name="comment" type="text" class="form-control" id="inputDesc">
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6 col-sm-12">
+                    <label for="inputVolume" class="form-label">Volume</label>
+                    <select name="volume" id="inputVolume" class="form-select" required>
+                        {% for volume in volumeList %}
+                            <option value="{{ volume.getName()|e('html_attr') }}">{{ volume.getName() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <label for="inputGroup" class="form-label">Group Access</label>
+                    <select name="group" id="inputGroup" class="form-select" required>
+                        {% for group in groupList %}
+                            <option value="{{ group.getName()|e('html_attr') }}">{{ group.getName() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="inputReadOnly" name="readOnly">
+                    <label class="form-check-label" for="inputReadOnly">
+                        Read Only
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit <i data-feather="check"></i></button>
+        </fieldset>
+    </form>
+
+{% endblock %}

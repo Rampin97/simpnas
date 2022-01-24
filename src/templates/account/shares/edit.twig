@@ -1,0 +1,57 @@
+{% extends 'base/admin.twig' %}
+{% import "base/utils.twig" as utils %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Shares</h1>
+    </div>
+
+    <form method="POST" action="{{ full_url_for('actions.shares.edit') }}">
+        <fieldset>
+            <legend>Edit share</legend>
+
+            <input name="currentName" type="hidden" value="{{ editShare.getName()|e('html_attr') }}">
+
+            <div class="mb-3">
+                <label for="inputName" class="form-label">Name</label>
+                <input placeholder="Name" required autofocus name="newName" type="text" class="form-control"
+                       id="inputName" pattern="[a-zA-Z0-9-]{1,25}" value="{{ editShare.getName()|e('html_attr') }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="inputDesc" class="form-label">Description</label>
+                <input value="{{ editShare.getComment()|e('html_attr') }}" placeholder="Description" name="comment" type="text" class="form-control" id="inputDesc">
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6 col-sm-12">
+                    <label for="inputVolume" class="form-label">Volume</label>
+                    <select name="volume" id="inputVolume" class="form-select" required>
+                        {% for volume in volumeList %}
+                            <option{{ (editShare.getVolume() is same as(volume)) ? ' selected' : '' }} value="{{ volume.getName()|e('html_attr') }}">{{ volume.getName() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <label for="inputGroup" class="form-label">Group Access</label>
+                    <select name="group" id="inputGroup" class="form-select" required>
+                        {% for group in groupList %}
+                            <option{{ (editShare.getGroup() is same as(group)) ? ' selected' : '' }} value="{{ group.getName()|e('html_attr') }}">{{ group.getName() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input{{ (editShare.isReadOnly()) ? ' checked' : '' }} class="form-check-input" type="checkbox" value="1" id="inputReadOnly" name="readOnly">
+                    <label class="form-check-label" for="inputReadOnly">
+                        Read Only
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit <i data-feather="check"></i></button>
+        </fieldset>
+    </form>
+{% endblock %}

@@ -10,11 +10,8 @@ use Slim\Views\Twig;
 class Storage
 {
 
-    private Twig $twig;
-
-    public function __construct(Twig $twig)
+    public function __construct(private Twig $twig)
     {
-        $this->twig = $twig;
     }
 
     public function disks(Response $response): Response {
@@ -27,7 +24,7 @@ class Storage
     public function volumes(Response $response): Response {
         return $this->twig->render($response, 'account/volumes/index.twig', [
             'title' => ['Volumes'],
-            'volumeList' => Volume::getVolumeList()
+            'volumeList' => Volume::getList()
         ]);
     }
 

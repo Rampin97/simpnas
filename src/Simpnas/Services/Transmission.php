@@ -100,4 +100,12 @@ class Transmission extends AbstractService
     {
         return true;
     }
+
+    /**
+     * @return string
+     */
+    public function getShareName(): string
+    {
+        return "downloads";
+    }
 }

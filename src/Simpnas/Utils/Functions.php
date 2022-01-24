@@ -39,7 +39,7 @@ class Functions
 
         $read = fopen($file, 'rb') or die("can't open the file");
 
-        while(!feof($read)) {
+        while (!feof($read)) {
             $array[$i] = fgets($read);
             ++$i;
         }
@@ -48,8 +48,8 @@ class Functions
 
         $write = fopen($file, 'wb') or die("can't open the file");
 
-        foreach($array as $a) {
-            if (strpos($a, $string) === false) {
+        foreach ($array as $a) {
+            if (!str_contains($a, $string)) {
                 fwrite($write,$a);
             }
         }

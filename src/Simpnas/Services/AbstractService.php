@@ -5,6 +5,10 @@ namespace Simpnas\Services;
 abstract class AbstractService
 {
 
+    public function __construct(protected $dockerVolume)
+    {
+    }
+
     /**
      * @return string
      */
@@ -31,7 +35,7 @@ abstract class AbstractService
      * @return string
      */
     public function getWebsite(): string {
-        return "";
+        return '';
     }
 
     /**
@@ -47,6 +51,25 @@ abstract class AbstractService
     public function getContainerName(): string {
         return $this->getId();
     }
+
+    /**
+     * @return string
+     */
+    public function getFolder(): string {
+        return sprintf("/volumes/%s/docker/%s", $this->dockerVolume, $this->getContainerName());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInstalled(): bool {
+        return file_exists($this->getFolder());
+    }
+
+    /**
+     * @return string|null
+     */
+    abstract public function getShareName(): ?string;
 
     /**
      * @return string

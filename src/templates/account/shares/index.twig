@@ -1,0 +1,78 @@
+{% extends 'base/admin.twig' %}
+{% import "base/utils.twig" as utils %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Shares</h1>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{{ full_url_for('account.shares.create') }}" type="button" class="btn btn-outline-secondary">
+                <span data-feather="plus"></span>
+                Add Share
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <tr>
+                <th>Share</th>
+                <th>Description</th>
+                <th>Group</th>
+                <th>Size</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for s in shareList %}
+                <tr class="align-middle">
+                    <td>
+                        <span class="mr-2" data-feather="folder"></span>
+                        {{ s.getName() }}
+                        {% if s.isReadOnly() %}
+                            <small class='text-danger'>Read Only</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ s.getComment() }}</td>
+                    <td>{{ s.getGroup() }}</td>
+                    <td>{{ s.getUsedSpace() }}B</td>
+                    <td>
+                        <a href="{{ full_url_for('account.shares.edit', {name: s.getName() }) }}" class="btn btn-outline-secondary"><span data-feather="edit"></span></a>
+                        <button data-bs-toggle="modal" data-bs-target="#deleteModal--{{ s.getName()|e('html_attr') }}" class="btn btn-outline-danger"><span data-feather="trash"></span></button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="text-center py-3 h3" colspan="5">No shares available!</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% for s in shareList %}
+        <div class="modal fade" id="deleteModal--{{ s.getName()|e('html_attr') }}" tabindex="-1" aria-labelledby="deleteLabel--{{ s.getName()|e('html_attr') }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="POST" action="{{ full_url_for('actions.shares.delete') }}">
+                    <input type="hidden" name="name" value="{{ s.getName()|e('html_attr') }}">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteLabel--{{ s.getName()|e('html_attr') }}"><i>{{ s.getName() }}</i> delete confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p>Are you sure you want to delete <i>{{ s.getName() }}</i>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

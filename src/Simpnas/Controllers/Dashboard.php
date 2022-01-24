@@ -13,11 +13,8 @@ use Slim\Views\Twig;
 class Dashboard
 {
 
-    private Twig $twig;
-
-    public function __construct(Twig $twig)
+    public function __construct(private Twig $twig)
     {
-        $this->twig = $twig;
     }
 
 
@@ -47,7 +44,7 @@ class Dashboard
 
         $usersCount = count($usersList);
         $groupsCount = count($groupsList);
-        $volumesCount = count(Volume::getVolumeList());
+        $volumesCount = count(Volume::getList());
         $disksCount = count(Disk::getStorageDisks());
         $sharesCount = (int) exec("(ls /etc/samba/shares | wc -l) 2> /dev/null");
         $appsCount = ((int) exec("docker ps | wc -l")) - 1;
@@ -92,7 +89,7 @@ class Dashboard
             'systemTime' => $systemTime,
             'machineId' => $machineId,
             'simpNasVersion' => SimpleConst::simpNasVersion,
-            'volumeList' => Volume::getVolumeList()
+            'volumeList' => Volume::getList()
         ];
 
         return $this->twig->render($response, 'account/dashboard.twig', $data);

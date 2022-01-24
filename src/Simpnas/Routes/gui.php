@@ -6,6 +6,7 @@ use Simpnas\Controllers\Dashboard;
 use Simpnas\Controllers\Extra;
 use Simpnas\Controllers\Login;
 use Simpnas\Controllers\Power;
+use Simpnas\Controllers\Settings;
 use Simpnas\Controllers\Shares;
 use Simpnas\Controllers\Storage;
 use Simpnas\Middleware\SetupCompleted;
@@ -13,7 +14,7 @@ use Simpnas\Middleware\UserLoggedIn;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
-return static function (App $app) {
+return static function(App $app) {
     $app->group('', function (RouteCollectorProxy $group) {
 
         $group->get('/', [Extra::class, 'index'])
@@ -55,6 +56,14 @@ return static function (App $app) {
                 });
             });
 
+            $group->group('/settings', function (RouteCollectorProxy $group) {
+                $group->get('/date-and-time', [Settings::class, 'dateTime'])
+                    ->setName('account.dateTime');
+
+                $group->get('/network', [Settings::class, 'network'])
+                    ->setName('account.network');
+            });
+
             $group->group('/users-and-share', function (RouteCollectorProxy $group) {
 
                 $group->group('/users', function (RouteCollectorProxy $group) {
@@ -78,6 +87,18 @@ return static function (App $app) {
                     $group->get('/edit/{name}', [Shares::class, 'editGroup'])
                         ->setName('account.groups.edit');
                 });
+
+                $group->group('/shares', function (RouteCollectorProxy $group) {
+                    $group->get('', [Shares::class, 'shares'])
+                        ->setName('account.shares');
+
+                    $group->get('/create', [Shares::class, 'createShare'])
+                        ->setName('account.shares.create');
+
+                    $group->get('/edit/{name}', [Shares::class, 'editShare'])
+                        ->setName('account.shares.edit');
+                });
+
             });
 
         })->add(UserLoggedIn::class);

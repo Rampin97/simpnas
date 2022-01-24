@@ -100,4 +100,12 @@ class Jellyfin extends AbstractService
     {
         return true;
     }
+
+    /**
+     * @return string
+     */
+    public function getShareName(): string
+    {
+        return "media";
+    }
 }

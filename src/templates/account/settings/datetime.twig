@@ -1,0 +1,35 @@
+{% extends 'base/admin.twig' %}
+{% import "base/utils.twig" as utils %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Date & Time</h1>
+    </div>
+
+    <form method="POST" action="{{ full_url_for('actions.settings.timezone') }}">
+        <fieldset>
+
+            <div class="mb-3">
+                <label for="inputTimezone" class="form-label">Timezone</label>
+                <select name="timezone" id="inputTimezone" class="form-select" required>
+                    {% for timezone in timezoneList %}
+                        <option{{ timezone is same as(currentTimezone) ? ' selected' : '' }} value="{{ timezone|e('html_attr') }}">{{ timezone }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputLocalDate" class="form-label">Local Date</label>
+                <input type="date" class="form-control" id="inputLocalDate" value="{{ currentLocalDate|e('html_attr') }}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputLocalTime" class="form-label">Local Time</label>
+                <input type="time" class="form-control" id="inputLocalTime" value="{{ currentLocalTime|e('html_attr') }}" readonly>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit <i data-feather="check"></i></button>
+        </fieldset>
+    </form>
+
+{% endblock %}

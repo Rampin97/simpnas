@@ -13,6 +13,7 @@ class Login
 
     public function page(Request $request, Response $response, Twig $twig): Response {
         return $twig->render($response, 'login.twig', [
+            'title' => ['Login'],
             'bodyClass' => ['text-center'],
             'showMenu' => false
         ]);

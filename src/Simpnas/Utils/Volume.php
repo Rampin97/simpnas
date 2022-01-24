@@ -14,7 +14,7 @@ class Volume extends StorageInfo
     /**
      * @return Volume[]
      */
-    public static function getVolumeList(): array {
+    public static function getList(): array {
         exec("ls /volumes", $volumeList);
 
         return array_map(static function (string $id) {
