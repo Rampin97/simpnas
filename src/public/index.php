@@ -10,6 +10,9 @@ use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\SlimFlashMessages;
+use function Simpnas\Routes\actions;
+use function Simpnas\Routes\gui;
+use function Simpnas\Routes\setup;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -59,9 +62,9 @@ if (Functions::isCacheEnabled()) {
 try {
     $app = Bridge::create($builder->build());
 
-    (require(__DIR__ . '/../Simpnas/Routes/gui.php'))($app);
-    (require(__DIR__ . '/../Simpnas/Routes/setup.php'))($app);
-    (require(__DIR__ . '/../Simpnas/Routes/actions.php'))($app);
+    actions($app);
+    setup($app);
+    gui($app);
 
     if (Functions::isCacheEnabled()) {
         $routeCollector = $app->getRouteCollector();

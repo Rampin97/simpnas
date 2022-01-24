@@ -16,7 +16,7 @@ use Simpnas\Middleware\UserLoggedIn;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
-return static function (App $app) {
+function actions(App $app) {
     $app->group('/actions', function (RouteCollectorProxy $group) {
 
         $group->group('', function (RouteCollectorProxy $group) {

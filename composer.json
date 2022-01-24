@@ -11,7 +11,12 @@
     "autoload": {
         "psr-4": {
             "Simpnas\\": "src/Simpnas"
-        }
+        },
+        "files" : [
+            "src/Simpnas/Routes/actions.php",
+            "src/Simpnas/Routes/gui.php",
+            "src/Simpnas/Routes/setup.php"
+        ]
     },
     "require": {
         "php": "^7.4 || ^8.0",

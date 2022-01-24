@@ -14,7 +14,7 @@ use Simpnas\Middleware\UserLoggedIn;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
-return static function(App $app) {
+function gui(App $app) {
     $app->group('', function (RouteCollectorProxy $group) {
 
         $group->get('/', [Extra::class, 'index'])

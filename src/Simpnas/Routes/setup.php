@@ -8,7 +8,7 @@ use Simpnas\Middleware\SetupTodo;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
-return static function (App $app) {
+function setup(App $app) {
     $app->group('/setup', function (RouteCollectorProxy $group) {
 
         $group->group('', function (RouteCollectorProxy $group) {
